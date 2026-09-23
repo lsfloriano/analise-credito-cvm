@@ -16,7 +16,7 @@ def limpar(bruto):
     df["versao"] = df["VERSAO"].astype(int)
 
     # reapresentação: só a maior versão de cada demonstrativo
-    maior = df.groupby(["cd_cvm", "ano", "tipo", "demonstrativo"])["versao"].transform("max")
+    maior = df.groupby(["cd_cvm", "ano", "dt_fim", "tipo", "demonstrativo"])["versao"].transform("max")
     df = df[df["versao"] == maior].copy()
 
     escala = df["ESCALA_MOEDA"].map(ESCALAS)

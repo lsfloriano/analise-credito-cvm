@@ -69,6 +69,20 @@ def test_usa_individual_quando_consolidado_nao_existe_ou_zerado(linha_cvm):
     assert res.loc[2, "valor"] == 70_000.0
 
 
+def test_versao_maxima_e_por_periodo_nao_por_ano(linha_cvm):
+    # mesma empresa, mesmo ano civil, dois períodos (troca de data de encerramento);
+    # cada período deve manter sua própria maior versão, não a maior versão do ano todo.
+    out = limpar.limpar(_df([
+        linha_cvm("1", "100.0", dt_fim="2024-03-31", versao="3"),
+        linha_cvm("1", "50.0", dt_fim="2024-03-31", versao="1"),
+        linha_cvm("1", "200.0", dt_fim="2024-12-31", versao="1"),
+    ]))
+    assert sorted(out["dt_fim"].dt.strftime("%Y-%m-%d").tolist()) == ["2024-03-31", "2024-12-31"]
+    res = out.set_index(out["dt_fim"].dt.strftime("%Y-%m-%d"))
+    assert res.loc["2024-03-31", "valor"] == 100_000.0
+    assert res.loc["2024-12-31", "valor"] == 200_000.0
+
+
 def test_ano_vem_do_fim_do_exercicio(linha_cvm):
     out = limpar.limpar(_df([linha_cvm("1", "1.0", dt_fim="2024-03-31")]))
     assert out["ano"].item() == 2024
