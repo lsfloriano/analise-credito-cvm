@@ -53,6 +53,28 @@ def test_essencial_ausente_vira_nan_e_registra():
     ]
 
 
+def test_duplicata_identica_no_mesmo_periodo_nao_gera_problema():
+    linha = _filtrado(_todas())
+    dup = pd.concat([linha, linha[linha["cd_conta"] == "1"]], ignore_index=True)
+    cb, problemas = contas_base.montar_contas_base(dup)
+    assert len(cb) == 1
+    assert problemas[problemas["problema"].str.startswith("duplicata")].empty
+
+
+def test_duplicata_com_valores_divergentes_registra_problema():
+    linha = _filtrado(_todas())
+    divergente = linha[linha["cd_conta"] == "1"].copy()
+    divergente["valor"] = 999.0
+    dup = pd.concat([linha, divergente], ignore_index=True)
+    cb, problemas = contas_base.montar_contas_base(dup)
+    assert len(cb) == 1
+    registros = problemas[problemas["problema"].str.startswith("duplicata")].to_dict("records")
+    assert registros == [
+        {"cd_cvm": 1, "ano": 2024, "etapa": "contas_base",
+         "problema": "duplicata com valores divergentes: ativo_total"}
+    ]
+
+
 def test_duplicata_no_mesmo_ano_fica_com_exercicio_mais_recente():
     antigo = _filtrado(_todas(1.0), dt="2024-03-31")
     novo = _filtrado(_todas(2.0), dt="2024-12-31")
