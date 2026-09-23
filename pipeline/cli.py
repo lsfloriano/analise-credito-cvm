@@ -33,6 +33,8 @@ def run(anos, *, forcar=False, raw_dir=config.DATA_RAW, out_dir=config.DATA_PROC
     cb, prob_contas = montar_contas_base(filtrado)
     fato = calcular_scores(cb)
     problemas = pd.concat([prob_filtro, prob_contas], ignore_index=True)
+    nome_por_empresa = limpo.sort_values("ano", kind="stable").groupby("cd_cvm")["nome"].last()
+    problemas.insert(1, "nome", problemas["cd_cvm"].map(nome_por_empresa))
     caminhos = exportar(fato, cadastro, problemas, out_dir)
     print(f"{fato['cd_cvm'].nunique()} empresas, {len(fato)} empresas-ano, "
           f"{len(problemas)} problemas registrados → {Path(out_dir)}")
