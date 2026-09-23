@@ -1,0 +1,343 @@
+table fato_indicadores
+	lineageTag: 1e584870-8c73-43f0-8c54-aa9d8aa72f62
+
+	column cd_cvm
+		dataType: int64
+		formatString: 0
+		lineageTag: 2282095c-bbed-44e9-bcbd-bd5caf276c31
+		summarizeBy: sum
+		sourceColumn: cd_cvm
+
+		annotation SummarizationSetBy = Automatic
+
+	column ano
+		dataType: int64
+		formatString: 0
+		lineageTag: 81b25ad4-d71a-4306-a4f5-79502f91ca30
+		summarizeBy: sum
+		sourceColumn: ano
+
+		annotation SummarizationSetBy = Automatic
+
+	column tipo_demonstrativo
+		dataType: string
+		lineageTag: c4cef3d4-9c6d-4d66-b84e-ce4c20cfceee
+		summarizeBy: none
+		sourceColumn: tipo_demonstrativo
+
+		annotation SummarizationSetBy = Automatic
+
+	column ativo_total
+		dataType: double
+		lineageTag: e23979b9-64c0-446b-8df0-f9e844ccef4b
+		summarizeBy: sum
+		sourceColumn: ativo_total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ativo_circulante
+		dataType: double
+		lineageTag: 5fe92eb1-19f8-4c36-8c9f-a6d475213e2f
+		summarizeBy: sum
+		sourceColumn: ativo_circulante
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column caixa
+		dataType: double
+		lineageTag: 847800b3-a90a-45c4-8ba1-06e141a9830e
+		summarizeBy: sum
+		sourceColumn: caixa
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column aplicacoes_financeiras
+		dataType: double
+		lineageTag: 4c03c5a2-86e1-4f1c-ac97-fdac3c61555f
+		summarizeBy: sum
+		sourceColumn: aplicacoes_financeiras
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column estoques
+		dataType: double
+		lineageTag: a3143077-6f41-44bd-989e-20e724ee9044
+		summarizeBy: sum
+		sourceColumn: estoques
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ativo_nao_circulante
+		dataType: double
+		lineageTag: 6d9503ec-ce51-4576-a62a-6cdd1bc893e0
+		summarizeBy: sum
+		sourceColumn: ativo_nao_circulante
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column passivo_total
+		dataType: double
+		lineageTag: 3de94adc-e905-4274-a114-eabe9d763ea9
+		summarizeBy: sum
+		sourceColumn: passivo_total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column passivo_circulante
+		dataType: double
+		lineageTag: 0a450235-7785-4aa1-9c8d-c871c192b53e
+		summarizeBy: sum
+		sourceColumn: passivo_circulante
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column emprestimos_cp
+		dataType: double
+		lineageTag: a6db0aac-9d7a-41ad-8bd7-125cc4641b2a
+		summarizeBy: sum
+		sourceColumn: emprestimos_cp
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column passivo_nao_circulante
+		dataType: double
+		lineageTag: 10e132ac-eb4b-40d5-bdfc-137e713d1834
+		summarizeBy: sum
+		sourceColumn: passivo_nao_circulante
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column emprestimos_lp
+		dataType: double
+		lineageTag: 10acf876-5384-4c8d-ba75-710db3705bc8
+		summarizeBy: sum
+		sourceColumn: emprestimos_lp
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column patrimonio_liquido
+		dataType: double
+		lineageTag: 11edafef-cfb1-47e8-b8f4-5561f4d74b61
+		summarizeBy: sum
+		sourceColumn: patrimonio_liquido
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column reservas_lucros
+		dataType: double
+		lineageTag: dc124786-60ef-4efb-b05e-26ff32aa7952
+		summarizeBy: sum
+		sourceColumn: reservas_lucros
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lucros_acumulados
+		dataType: double
+		lineageTag: 85472ff8-dff0-4b7f-8ff4-5b7b1c330356
+		summarizeBy: sum
+		sourceColumn: lucros_acumulados
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column receita_liquida
+		dataType: double
+		lineageTag: f250406d-55b3-4fe4-92f1-7338e9f35917
+		summarizeBy: sum
+		sourceColumn: receita_liquida
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ebit
+		dataType: double
+		lineageTag: 4e7ddc36-933f-4e72-a231-8186a8b7bf3a
+		summarizeBy: sum
+		sourceColumn: ebit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column despesas_financeiras
+		dataType: double
+		lineageTag: abb5541f-ac9b-41bd-be11-92928900cad1
+		summarizeBy: sum
+		sourceColumn: despesas_financeiras
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lucro_liquido
+		dataType: double
+		lineageTag: 443534c1-4553-46d7-858c-28a746206e8f
+		summarizeBy: sum
+		sourceColumn: lucro_liquido
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column fco
+		dataType: double
+		lineageTag: b963b119-20a5-447d-a451-1916a18f7930
+		summarizeBy: sum
+		sourceColumn: fco
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column x1
+		dataType: double
+		lineageTag: c0d831dc-58de-4288-9dbe-aeac6e20bddb
+		summarizeBy: sum
+		sourceColumn: x1
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column x2
+		dataType: double
+		lineageTag: 6cb85625-17ef-4eba-b888-67af89793fde
+		summarizeBy: sum
+		sourceColumn: x2
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column x3
+		dataType: double
+		lineageTag: a7468304-446f-411d-8e3b-91d95bdb2632
+		summarizeBy: sum
+		sourceColumn: x3
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column x4
+		dataType: double
+		lineageTag: 65627321-a723-44f1-9813-67d5458bbd32
+		summarizeBy: sum
+		sourceColumn: x4
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column z
+		dataType: double
+		lineageTag: b1dc2ac3-8429-4d74-8968-3ff1abac55ef
+		summarizeBy: sum
+		sourceColumn: z
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column zona
+		dataType: string
+		lineageTag: 50f9b97f-92be-4105-9dc4-ffeffe6fdbad
+		summarizeBy: none
+		sourceColumn: zona
+
+		annotation SummarizationSetBy = Automatic
+
+	column cdg
+		dataType: double
+		lineageTag: b9e1eb52-3320-427f-9198-f3fb2227c791
+		summarizeBy: sum
+		sourceColumn: cdg
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column t
+		dataType: double
+		lineageTag: 1b8cc97d-5019-4e97-896d-404e840bf8ac
+		summarizeBy: sum
+		sourceColumn: t
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ncg
+		dataType: double
+		lineageTag: ff0dc4bb-cab3-4dc3-8f6b-ffbae364ef11
+		summarizeBy: sum
+		sourceColumn: ncg
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column tipo_fleuriet
+		dataType: int64
+		formatString: 0
+		lineageTag: 67686ad4-e36f-4c29-9167-973834b8af01
+		summarizeBy: sum
+		sourceColumn: tipo_fleuriet
+
+		annotation SummarizationSetBy = Automatic
+
+	column situacao_fleuriet
+		dataType: string
+		lineageTag: 1fa610aa-03d7-4be5-bc70-d15f37e91e6f
+		summarizeBy: none
+		sourceColumn: situacao_fleuriet
+
+		annotation SummarizationSetBy = Automatic
+
+	column efeito_tesoura
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a7c7da9a-168c-4992-ab2a-be5f62f274f2
+		summarizeBy: none
+		sourceColumn: efeito_tesoura
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fato_indicadores = m
+		mode: import
+		source =
+				let
+				    Fonte = Parquet.Document(File.Contents("C:\Users\LeonardoSantiagoFlor\projects\analise-credito-cvm\data\processed\fato_indicadores.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+				in
+				    Fonte
+
+	annotation PBI_ResultType = Table
+

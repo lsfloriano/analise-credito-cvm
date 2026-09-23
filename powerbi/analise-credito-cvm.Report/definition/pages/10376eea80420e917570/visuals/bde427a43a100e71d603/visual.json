@@ -1,0 +1,70 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "bde427a43a100e71d603",
+  "position": {
+    "x": 9.4504902903287817,
+    "y": 0,
+    "z": 0,
+    "height": 857.631993847337,
+    "width": 1632.5721976542973,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fato_indicadores"
+                    }
+                  },
+                  "Property": "ano"
+                }
+              },
+              "queryRef": "Sum(fato_indicadores.ano)",
+              "nativeQueryRef": "ano"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fato_indicadores"
+                    }
+                  },
+                  "Property": "zona"
+                }
+              },
+              "queryRef": "fato_indicadores.zona",
+              "nativeQueryRef": "zona"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "e9313f0a6097eb0da236",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fato_indicadores"
+              }
+            },
+            "Property": "zona"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}
