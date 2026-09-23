@@ -15,6 +15,7 @@ from pipeline.indices import calcular_indices
 from pipeline.leitura import ler_dfp
 from pipeline.limpar import limpar
 from pipeline.scores import calcular_scores
+from pipeline import validacao
 
 
 def _parse_anos(texto):
@@ -52,6 +53,27 @@ def referencia(cvms, *, out_dir=config.DATA_PROCESSED, saida=config.RAIZ / "docs
     return saida
 
 
+def validar_dax(tipo, csv, *, ano=None, ano_base=None, out_dir=config.DATA_PROCESSED):
+    out_dir = Path(out_dir)
+    fato = pd.read_parquet(out_dir / "fato_indicadores.parquet")
+    empresas = pd.read_parquet(out_dir / "dim_empresa.parquet")
+    dax = validacao.ler_resultado_dax(csv)
+    if tipo == "indices":
+        ref, chaves = validacao.referencia_indices(fato), ["cd_cvm", "ano"]
+    elif tipo == "benchmark":
+        ref, chaves = validacao.referencia_benchmark(fato, empresas), ["setor", "ano"]
+    elif tipo == "percentil":
+        ref, chaves = validacao.referencia_percentil(fato, empresas, ano), ["cd_cvm", "ano"]
+    else:
+        ref, chaves = validacao.referencia_migracao(fato, ano_base, ano), ["zona", "zona_origem"]
+    colunas = [c for c in ref.columns if c not in chaves]
+    div = validacao.comparar(dax, ref, chaves, colunas)
+    print(f"{tipo}: {len(ref)} linhas de referencia x {len(dax)} do DAX, {len(div)} divergencias")
+    if len(div):
+        print(div.head(20).to_string(index=False))
+    return 0 if div.empty else 1
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="python -m pipeline")
     sub = parser.add_subparsers(dest="comando", required=True)
@@ -61,12 +83,19 @@ def main(argv=None):
     p_ref = sub.add_parser("referencia", help="gera índices de referência para validar o DAX")
     p_ref.add_argument("--cvm", type=int, nargs="+", required=True)
     p_ref.add_argument("--saida", default=str(config.RAIZ / "docs" / "referencia_indices.csv"))
+    p_val = sub.add_parser("validar-dax", help="compara o CSV de uma consulta DAX com o Python")
+    p_val.add_argument("tipo", choices=["indices", "benchmark", "percentil", "migracao"])
+    p_val.add_argument("csv")
+    p_val.add_argument("--ano", type=int)
+    p_val.add_argument("--ano-base", type=int)
     args = parser.parse_args(argv)
 
     if args.comando == "run":
         run(_parse_anos(args.anos), forcar=args.forcar)
-    else:
+    elif args.comando == "referencia":
         referencia(args.cvm, saida=args.saida)
+    elif args.comando == "validar-dax":
+        return validar_dax(args.tipo, args.csv, ano=args.ano, ano_base=args.ano_base)
     return 0
 
 
