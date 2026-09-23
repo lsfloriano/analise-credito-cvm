@@ -8,7 +8,7 @@ from pipeline import validacao
 
 def test_ler_resultado_dax_normaliza_cabecalhos(tmp_path):
     p = tmp_path / "r.csv"
-    p.write_text("dim_empresa[cd_cvm],dim_ano[ano],[liquidez_corrente]\n10,2024,1.5\n", encoding="utf-8-sig")
+    p.write_text("dim_empresa[cd_cvm],dim_ano[ano],[liquidez_corrente]\n10,2024,\"1,5\"\n", encoding="utf-8-sig")
     df = validacao.ler_resultado_dax(p)
     assert list(df.columns) == ["cd_cvm", "ano", "liquidez_corrente"]
     assert df.iloc[0]["liquidez_corrente"] == 1.5
@@ -108,3 +108,11 @@ def test_cli_validar_dax_sai_1_quando_diverge(tmp_path):
     csv.write_text("[zona],[zona_origem],[n]\nrisco,risco,1\nsegura,risco,1\nsegura,segura,1\n",
                    encoding="utf-8")
     assert cli.validar_dax("migracao", csv, ano=2025, ano_base=2024, out_dir=out) == 0
+
+
+def test_ler_resultado_dax_decimal_virgula_do_modelo_pt_br(tmp_path):
+    p = tmp_path / "r.csv"
+    p.write_text('dim_empresa[cd_cvm],[x],[zona]\n10,"1,5",risco\n11,,segura\n', encoding="utf-8-sig")
+    df = validacao.ler_resultado_dax(p)
+    assert df.iloc[0]["x"] == 1.5
+    assert math.isnan(df.iloc[1]["x"])

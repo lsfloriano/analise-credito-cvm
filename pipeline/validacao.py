@@ -7,7 +7,8 @@ COLUNAS_BENCHMARK = [*INDICES, "z"]
 
 
 def ler_resultado_dax(caminho):
-    df = pd.read_csv(caminho, encoding="utf-8-sig")
+    # o MCP grava na cultura do modelo (pt-BR): vírgula decimal
+    df = pd.read_csv(caminho, encoding="utf-8-sig", decimal=",")
     df.columns = [c.rsplit("[", 1)[-1].rstrip("]") for c in df.columns]
     return df
 
