@@ -9,7 +9,7 @@ from pipeline import scores
 def _base(**kw):
     """Empresa-ano com contas base neutras; sobrescreva o que o teste precisa."""
     linha = {
-        "cd_cvm": 1, "ano": 2024,
+        "cd_cvm": 1, "ano": 2024, "tipo_demonstrativo": "consolidado",
         "ativo_total": 100.0, "ativo_circulante": 50.0, "passivo_circulante": 30.0,
         "passivo_nao_circulante": 20.0, "ativo_nao_circulante": 50.0,
         "patrimonio_liquido": 50.0, "reservas_lucros": 10.0, "lucros_acumulados": 0.0,
@@ -84,21 +84,23 @@ def test_fleuriet_indeterminado_com_nan():
     assert pd.isna(r["situacao_fleuriet"])
 
 
-def _serie(pares, cd=1, ano0=2020):
+def _serie(pares, cd=1, ano0=2020, tipos=None):
     """pares = [(cdg, ncg), ...] em anos consecutivos a partir de ano0."""
-    return pd.DataFrame([{"cd_cvm": cd, "ano": ano0 + i, "cdg": c, "ncg": n}
-                         for i, (c, n) in enumerate(pares)])
+    if tipos is None:
+        tipos = ["consolidado"] * len(pares)
+    return pd.DataFrame([{"cd_cvm": cd, "ano": ano0 + i, "cdg": c, "ncg": n, "tipo_demonstrativo": t}
+                         for i, ((c, n), t) in enumerate(zip(pares, tipos))])
 
 
 def test_tesoura_exige_dois_anos_seguidos():
     # 2021: ΔNCG=10 > ΔCDG=0 ; 2022: ΔNCG=10 > ΔCDG=0 → tesoura em 2022
     df = scores.marcar_tesoura(_serie([(100, 50), (100, 60), (100, 70)]))
-    assert df["efeito_tesoura"].tolist() == [False, False, True]
+    assert df["efeito_tesoura"].tolist() == [pd.NA, pd.NA, True]
 
 
 def test_tesoura_nao_marca_com_um_ano_so():
     df = scores.marcar_tesoura(_serie([(100, 50), (100, 60), (120, 60)]))
-    assert df["efeito_tesoura"].tolist() == [False, False, False]
+    assert df["efeito_tesoura"].tolist() == [pd.NA, pd.NA, False]
 
 
 def test_tesoura_respeita_buraco_na_serie_e_empresas_diferentes():
@@ -106,7 +108,19 @@ def test_tesoura_respeita_buraco_na_serie_e_empresas_diferentes():
     b = _serie([(100, 70)], cd=1, ano0=2023)                     # 2023 (2022 falta)
     c = _serie([(100, 50), (100, 60), (100, 70)], cd=2)          # outra empresa
     df = scores.marcar_tesoura(pd.concat([a, b, c], ignore_index=True))
-    assert df["efeito_tesoura"].tolist() == [False, False, False, False, False, True]
+    assert df["efeito_tesoura"].tolist() == [pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, True]
+
+
+def test_tesoura_nula_quando_troca_consolidado_individual():
+    # mesma série de test_tesoura_exige_dois_anos_seguidos, mas o ano do meio é individual
+    df = scores.marcar_tesoura(_serie([(100, 50), (100, 60), (100, 70)],
+                                       tipos=["consolidado", "individual", "consolidado"]))
+    assert df["efeito_tesoura"].tolist() == [pd.NA, pd.NA, pd.NA]
+
+
+def test_tesoura_dtype_boolean_nullable():
+    df = scores.marcar_tesoura(_serie([(100, 50), (100, 60), (100, 70)]))
+    assert df["efeito_tesoura"].dtype == "boolean"
 
 
 def test_calcular_scores_junta_tudo():

@@ -49,15 +49,26 @@ def classificar_fleuriet(df):
 
 def marcar_tesoura(df):
     df = df.copy()
-    base = df[["cd_cvm", "ano", "cdg", "ncg"]].reset_index(drop=True)
-    anterior = (base.assign(ano=base["ano"] + 1)
-                    .rename(columns={"cdg": "cdg_ant", "ncg": "ncg_ant"}))
-    m = base.merge(anterior, on=["cd_cvm", "ano"], how="left")
-    m["piorou"] = (m["ncg"] - m["ncg_ant"]) > (m["cdg"] - m["cdg_ant"])
-    piorou_ant = (m[["cd_cvm", "ano", "piorou"]].assign(ano=m["ano"] + 1)
-                    .rename(columns={"piorou": "piorou_ant"}))
-    m = m.merge(piorou_ant, on=["cd_cvm", "ano"], how="left")
-    df["efeito_tesoura"] = (m["piorou"] & m["piorou_ant"].eq(True)).to_numpy(dtype=bool)
+    base = df[["cd_cvm", "ano", "cdg", "ncg", "tipo_demonstrativo"]].reset_index(drop=True)
+    ant1 = (base.assign(ano=base["ano"] + 1)
+                .rename(columns={"cdg": "cdg_1", "ncg": "ncg_1", "tipo_demonstrativo": "tipo_1"}))
+    ant2 = (base.assign(ano=base["ano"] + 2)
+                .rename(columns={"cdg": "cdg_2", "ncg": "ncg_2", "tipo_demonstrativo": "tipo_2"}))
+    m = base.merge(ant1, on=["cd_cvm", "ano"], how="left").merge(ant2, on=["cd_cvm", "ano"], how="left")
+
+    elegivel = (
+        (m["tipo_demonstrativo"] == m["tipo_1"]) & (m["tipo_demonstrativo"] == m["tipo_2"])
+        & m["cdg"].notna() & m["ncg"].notna()
+        & m["cdg_1"].notna() & m["ncg_1"].notna()
+        & m["cdg_2"].notna() & m["ncg_2"].notna()
+    )
+    piorou_t = (m["ncg"] - m["ncg_1"]) > (m["cdg"] - m["cdg_1"])
+    piorou_t1 = (m["ncg_1"] - m["ncg_2"]) > (m["cdg_1"] - m["cdg_2"])
+    marcado = elegivel & piorou_t & piorou_t1
+
+    df["efeito_tesoura"] = pd.array(
+        np.where(elegivel.to_numpy(), marcado.to_numpy(), pd.NA), dtype="boolean"
+    )
     return df
 
 
