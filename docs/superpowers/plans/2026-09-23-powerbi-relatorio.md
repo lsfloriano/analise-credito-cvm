@@ -749,6 +749,8 @@ VAR _anterior = CALCULATE ( SELECTEDMEASURE (), dim_ano[ano] = _ano - 1 )
 RETURN IF ( NOT ISBLANK ( _atual ) && NOT ISBLANK ( _anterior ), _atual - _anterior )
 ```
 
+> **Corrigido na execução (2026-09-23):** a forma acima de Mediana/Q1/Q3 (`FILTER ( VALUES ( dim_empresa[cd_cvm] ), ... )` direto no agregador) divergiu em 94 valores na consulta de 30 colunas. No modelo, os itens 1–5 usam o padrão materializado sobre `VALUES ( fato_indicadores[cd_cvm] )` descrito em `docs/validacao-dax.md` (seção "Defeito encontrado e corrigido"). O TMDL em `powerbi/` é a fonte da verdade.
+
 Leitura: Quartil 1 = valores mais baixos do setor; a direção (maior ou menor é melhor) vem de `[Leitura do Índice]`.
 
 - [ ] **Step 3: Validar medianas e quartis** — `Execute`, `maxRows: 10000`
