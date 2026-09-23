@@ -82,6 +82,25 @@ def test_run_qualidade_tem_nome_da_empresa_sem_cadastro(tmp_path):
     assert linha["problema"] == "sem cadastro"
 
 
+def test_run_saida_compativel_com_console_cp1252(tmp_path, capsys):
+    raw = tmp_path / "raw"
+    raw.mkdir()
+    for ano in (2023, 2024):
+        _zip(raw / f"dfp_cia_aberta_{ano}.zip", ano)
+    (raw / "cad_cia_aberta.csv").write_bytes(
+        ("CNPJ_CIA;DENOM_SOCIAL;SIT;DT_INI_SIT;CD_CVM;SETOR_ATIV\n"
+         "11;EMPRESA A SA;ATIVO;2010-01-01;10;Alimentos\n").encode("latin-1"))
+
+    def get(url, timeout):
+        raise AssertionError("não deveria baixar: arquivos estão em cache")
+
+    cli.run([2023, 2024], raw_dir=raw, out_dir=tmp_path / "out", get=get)
+
+    out = capsys.readouterr().out
+    out.encode("cp1252")  # não deve lançar UnicodeEncodeError
+    assert "→" not in out
+
+
 def test_parse_anos():
     assert list(cli._parse_anos("2015-2017")) == [2015, 2016, 2017]
     assert list(cli._parse_anos("2020")) == [2020]

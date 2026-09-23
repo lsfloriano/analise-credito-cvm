@@ -37,7 +37,7 @@ def run(anos, *, forcar=False, raw_dir=config.DATA_RAW, out_dir=config.DATA_PROC
     problemas.insert(1, "nome", problemas["cd_cvm"].map(nome_por_empresa))
     caminhos = exportar(fato, cadastro, problemas, out_dir)
     print(f"{fato['cd_cvm'].nunique()} empresas, {len(fato)} empresas-ano, "
-          f"{len(problemas)} problemas registrados → {Path(out_dir)}")
+          f"{len(problemas)} problemas registrados -> {Path(out_dir)}")
     return caminhos
 
 
@@ -48,7 +48,7 @@ def referencia(cvms, *, out_dir=config.DATA_PROCESSED, saida=config.RAIZ / "docs
     saida = Path(saida)
     saida.parent.mkdir(parents=True, exist_ok=True)
     ref.sort_values(["cd_cvm", "ano"]).to_csv(saida, index=False, float_format="%.6f")
-    print(f"{len(ref)} linhas de referência → {saida}")
+    print(f"{len(ref)} linhas de referência -> {saida}")
     return saida
 
 
