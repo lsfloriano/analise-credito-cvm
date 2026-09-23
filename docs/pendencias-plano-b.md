@@ -1,5 +1,9 @@
 # Pendências herdadas pelo Plano B (Power BI e entrega)
 
+## Decisões já tomadas (2026-09-23)
+- **Divisão de trabalho:** o modelo semântico (Power Query dos Parquet, relações, `dim_ano`, medidas DAX, dicionário de métricas, validação DAX × `docs/referencia_indices.csv`) é construído e validado pelo Claude via Power BI Modeling MCP. Os **visuais das 4 páginas** são montados pelo Leonardo no Power BI Desktop, seguindo um roteiro página a página escrito pelo Claude, com revisão por print.
+- MCP registrado no escopo local deste projeto, com o argumento `--start`. Abra o Claude Code a partir desta pasta.
+
 Levantadas na revisão final do pipeline (2026-09-23). O Plano B deve tratar cada item.
 
 ## Contrato de dados para o DAX
