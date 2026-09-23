@@ -1,7 +1,7 @@
 # Conferência do pipeline com demonstrações publicadas
 
 Execução completa em 2026-09-23 (`python -m pipeline run`, 2015–2025):
-830 empresas, 6.266 empresas-ano, 1.258 registros no log de qualidade.
+830 empresas, 6.266 empresas-ano, 1.268 registros no log de qualidade.
 
 ## Exercício 2024 — valores consolidados (R$ mil)
 
@@ -38,10 +38,22 @@ Fontes:
 | filtro | layout não padrão | 5 |
 | contas_base | conta ausente: fco | 1 |
 | contas_base | conta ausente: caixa | 1 |
+| contas_base | duplicata com valores divergentes: ebit | 2 |
+| contas_base | duplicata com valores divergentes: aplicacoes_financeiras | 1 |
+| contas_base | duplicata com valores divergentes: ativo_circulante | 1 |
+| contas_base | duplicata com valores divergentes: ativo_nao_circulante | 1 |
+| contas_base | duplicata com valores divergentes: lucro_liquido | 1 |
+| contas_base | duplicata com valores divergentes: passivo_circulante | 1 |
+| contas_base | duplicata com valores divergentes: passivo_nao_circulante | 1 |
+| contas_base | duplicata com valores divergentes: patrimonio_liquido | 1 |
+| contas_base | duplicata com valores divergentes: reservas_lucros | 1 |
 
 Distribuição: zonas Z — segura 2.207, risco 2.092, cinzenta 1.938,
 indeterminada 29. Fleuriet — tipo II 2.315, I 1.052, V 951, III 854,
-VI 680, IV 413. Efeito tesoura marcado em 929 empresas-ano.
+VI 680, IV 413. Efeito tesoura: 898 empresas-ano marcadas `True` entre
+4.495 elegíveis (com histórico comparável de dois anos no mesmo tipo
+de demonstrativo); as demais 1.771 ficam nulas por falta de histórico
+comparável.
 Demonstrativo usado: consolidado 4.052, individual 2.214.
 
 O universo inclui companhias abertas que só emitem dívida (sem ações

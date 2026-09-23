@@ -146,7 +146,10 @@ ocorrem porque `NCG = CDG − T`.
 
 **Efeito tesoura:** flag `True` quando, por dois anos consecutivos,
 `ΔNCG > ΔCDG` (equivalente a `T` cair, já que `ΔT = ΔCDG − ΔNCG`).
-Exige os dois anos anteriores; sem histórico suficiente → `False`.
+Exige os dois anos anteriores com o mesmo tipo de demonstrativo
+(consolidado/individual); sem histórico comparável → nulo (não
+`False`), para que o painel não leia ausência de dado como ausência
+de risco.
 
 ### 4.5 `exportar`
 Grava em `data/processed/`:
@@ -241,3 +244,6 @@ publicação (Publish to Web, vídeo ou apenas prints) decidida ao final.
   `DT_FIM_EXERC`, aceito como aproximação.
 - **Z''-EM calibrado fora do Brasil** → apresentado como indicador de
   triagem, não como previsão; dito explicitamente no README.
+- **Dois exercícios no mesmo ano civil** (troca de data de encerramento,
+  ~6 empresas-ano): mantém-se o de fim mais recente; DRE pode cobrir
+  período menor que 12 meses.
