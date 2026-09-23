@@ -1,0 +1,19 @@
+/// Cópia desconectada de dim_zona: zona no ano base da matriz de migração.
+table zona_origem
+	lineageTag: 32035dd6-4c1c-4217-bac2-6443a8ca8c33
+
+	column zona_origem
+		isNameInferred
+		sourceColumn: [zona_origem]
+		sortByColumn: ordem_origem
+
+	column ordem_origem
+		isHidden
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [ordem_origem]
+
+	partition zona_origem = calculated
+		mode: import
+		source = SELECTCOLUMNS ( dim_zona, "zona_origem", dim_zona[zona], "ordem_origem", dim_zona[ordem] )
+

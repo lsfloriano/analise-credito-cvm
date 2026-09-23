@@ -1,0 +1,20 @@
+table dim_zona
+	lineageTag: 82dd80b7-c458-4416-b91a-ef76609ba22d
+
+	column zona
+		isNameInferred
+		sourceColumn: [zona]
+		sortByColumn: ordem
+
+	column ordem
+		isHidden
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [ordem]
+
+	partition dim_zona = calculated
+		mode: import
+		source =
+				DATATABLE ( "zona", STRING, "ordem", INTEGER,
+				    { { "segura", 1 }, { "cinzenta", 2 }, { "risco", 3 }, { "indeterminada", 4 } } )
+

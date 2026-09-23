@@ -1,0 +1,287 @@
+table Medidas
+	lineageTag: 3fb8301e-31c3-4656-b079-f79e6faf2261
+
+	/// Ativo Circulante / Passivo Circulante. Maior é melhor. Só em contexto de uma empresa-ano.
+	measure 'Liquidez Corrente' = IF ( COUNTROWS ( fato_indicadores ) = 1, DIVIDE ( SUM ( fato_indicadores[ativo_circulante] ), SUM ( fato_indicadores[passivo_circulante] ) ) )
+		formatString: 0.00
+		displayFolder: Índices
+		lineageTag: b7db323a-c345-4e71-b8a6-0ee5c3c2df14
+
+	/// (Ativo Circulante − Estoques) / Passivo Circulante. Maior é melhor.
+	measure 'Liquidez Seca' = IF ( COUNTROWS ( fato_indicadores ) = 1, DIVIDE ( SUM ( fato_indicadores[ativo_circulante] ) - SUM ( fato_indicadores[estoques] ), SUM ( fato_indicadores[passivo_circulante] ) ) )
+		formatString: 0.00
+		displayFolder: Índices
+		lineageTag: f13945fe-dd67-4037-9b81-8da7b2772d97
+
+	/// (Passivo Circulante + Passivo Não Circulante) / Ativo Total. Menor é melhor.
+	measure 'Endividamento Geral' = IF ( COUNTROWS ( fato_indicadores ) = 1, DIVIDE ( SUM ( fato_indicadores[passivo_circulante] ) + SUM ( fato_indicadores[passivo_nao_circulante] ), SUM ( fato_indicadores[ativo_total] ) ) )
+		formatString: 0.0%
+		displayFolder: Índices
+		lineageTag: a9832721-352d-42d4-ac20-e3c8d0326f91
+
+	/// (Empréstimos CP + LP − Caixa − Aplicações) / PL. Em branco se PL ≤ 0 ou caixa ausente. Menor é melhor.
+	measure 'Dívida Líquida / PL' =
+			VAR _pl = SUM ( fato_indicadores[patrimonio_liquido] )
+			VAR _caixa = SUM ( fato_indicadores[caixa] )
+			RETURN
+			    IF (
+			        COUNTROWS ( fato_indicadores ) = 1 && _pl > 0 && NOT ISBLANK ( _caixa ),
+			        DIVIDE (
+			            SUM ( fato_indicadores[emprestimos_cp] ) + SUM ( fato_indicadores[emprestimos_lp] )
+			                - _caixa - SUM ( fato_indicadores[aplicacoes_financeiras] ),
+			            _pl
+			        )
+			    )
+		formatString: 0.00
+		displayFolder: Índices
+		lineageTag: 52179efc-9171-4e70-b9af-6ff2afa50de8
+
+	/// EBIT / |Despesas Financeiras|. ABS porque a DRE traz a despesa negativa (44 empresas-ano vêm positivas). Maior é melhor.
+	measure 'Cobertura de Juros' = IF ( COUNTROWS ( fato_indicadores ) = 1, DIVIDE ( SUM ( fato_indicadores[ebit] ), ABS ( SUM ( fato_indicadores[despesas_financeiras] ) ) ) )
+		formatString: 0.0"x"
+		displayFolder: Índices
+		lineageTag: 28cc354d-75b5-44b8-ac8b-11d94f35d170
+
+	/// EBIT / Receita Líquida. Em branco com receita zero.
+	measure 'Margem EBIT' = IF ( COUNTROWS ( fato_indicadores ) = 1, DIVIDE ( SUM ( fato_indicadores[ebit] ), SUM ( fato_indicadores[receita_liquida] ) ) )
+		formatString: 0.0%
+		displayFolder: Índices
+		lineageTag: f69dedc3-b716-417c-867b-dbbf758d374a
+
+	/// Lucro Líquido / Receita Líquida. Em branco com receita zero.
+	measure 'Margem Líquida' = IF ( COUNTROWS ( fato_indicadores ) = 1, DIVIDE ( SUM ( fato_indicadores[lucro_liquido] ), SUM ( fato_indicadores[receita_liquida] ) ) )
+		formatString: 0.0%
+		displayFolder: Índices
+		lineageTag: 904484d1-de88-47a1-9c59-46f3a3dc9310
+
+	/// Lucro Líquido / Ativo Total. Maior é melhor.
+	measure ROA = IF ( COUNTROWS ( fato_indicadores ) = 1, DIVIDE ( SUM ( fato_indicadores[lucro_liquido] ), SUM ( fato_indicadores[ativo_total] ) ) )
+		formatString: 0.0%
+		displayFolder: Índices
+		lineageTag: f6ff0885-6795-44d9-ae2e-31b08ed43ebb
+
+	/// Lucro Líquido / PL. Em branco se PL ≤ 0. Maior é melhor.
+	measure ROE =
+			VAR _pl = SUM ( fato_indicadores[patrimonio_liquido] )
+			RETURN
+			    IF ( COUNTROWS ( fato_indicadores ) = 1 && _pl > 0,
+			        DIVIDE ( SUM ( fato_indicadores[lucro_liquido] ), _pl ) )
+		formatString: 0.0%
+		displayFolder: Índices
+		lineageTag: c5bf4f34-fd20-401f-9e9e-b54220fabfbe
+
+	/// Altman Z''-EM calculado no pipeline. Triagem, não previsão.
+	measure 'Z''''-EM' = IF ( COUNTROWS ( fato_indicadores ) = 1, MAX ( fato_indicadores[z] ) )
+		formatString: 0.00
+		displayFolder: Scores
+		lineageTag: b5e624d8-c35c-47ab-b582-07bb1fb6c761
+
+	/// Zona do Z''-EM: segura, cinzenta, risco ou indeterminada.
+	measure Zona = IF ( COUNTROWS ( fato_indicadores ) = 1, MAX ( fato_indicadores[zona] ) )
+		displayFolder: Scores
+		lineageTag: 676e1dd0-3c21-4261-a6a1-43e98722fe6f
+
+	/// Tipo Fleuriet de 1 a 6 (oculta; usada na validação e em ordenação).
+	measure 'Tipo Fleuriet (nº)' = IF ( COUNTROWS ( fato_indicadores ) = 1, MAX ( fato_indicadores[tipo_fleuriet] ) )
+		formatString: 0
+		isHidden
+		displayFolder: Scores
+		lineageTag: 889c901b-6560-469c-856c-607d1d5d7e33
+
+	/// Tipo Fleuriet em texto, ex. "II - Sólida".
+	measure 'Tipo Fleuriet' =
+			VAR _t = [Tipo Fleuriet (nº)]
+			RETURN
+			    IF ( NOT ISBLANK ( _t ),
+			        SWITCH ( _t, 1, "I", 2, "II", 3, "III", 4, "IV", 5, "V", 6, "VI" )
+			            & " - " & MAX ( fato_indicadores[situacao_fleuriet] ) )
+		displayFolder: Scores
+		lineageTag: b7d2550e-0e43-4ede-bec5-94822d6f1292
+
+	/// Capital de Giro = (PL + Passivo Não Circulante) − Ativo Não Circulante.
+	measure CDG = IF ( COUNTROWS ( fato_indicadores ) = 1, SUM ( fato_indicadores[cdg] ) )
+		formatString: #,0,,."mi"
+		displayFolder: Fleuriet
+		lineageTag: ee898132-1965-4a99-9f49-1caf634d1a83
+
+	/// Necessidade de Capital de Giro = CDG − T.
+	measure NCG = IF ( COUNTROWS ( fato_indicadores ) = 1, SUM ( fato_indicadores[ncg] ) )
+		formatString: #,0,,."mi"
+		displayFolder: Fleuriet
+		lineageTag: f3c6a70a-a957-4cda-a865-25819c59cc78
+
+	/// T = Caixa + Aplicações − Empréstimos CP.
+	measure 'Saldo de Tesouraria' = IF ( COUNTROWS ( fato_indicadores ) = 1, SUM ( fato_indicadores[t] ) )
+		formatString: #,0,,."mi"
+		displayFolder: Fleuriet
+		lineageTag: d9829640-b0a3-458e-88ee-b999f069dff0
+
+	/// "alerta", "não" ou "sem histórico" (nulo não é ausência de risco).
+	measure 'Efeito Tesoura' =
+			VAR _f = SELECTEDVALUE ( fato_indicadores[efeito_tesoura] )
+			RETURN
+			    IF ( COUNTROWS ( fato_indicadores ) = 1,
+			        SWITCH ( TRUE (), ISBLANK ( _f ), "sem histórico", _f, "alerta", "não" ) )
+		displayFolder: Fleuriet
+		lineageTag: d1c620d2-89e4-435d-9d7b-bf0927c952fb
+
+	/// Texto quando PL ≤ 0.
+	measure 'Aviso PL' =
+			VAR _pl = SUM ( fato_indicadores[patrimonio_liquido] )
+			RETURN
+			    IF ( COUNTROWS ( fato_indicadores ) = 1 && NOT ISBLANK ( _pl ) && _pl <= 0,
+			        "PL negativo ou zero: ROE e Dívida Líquida/PL não são calculados." )
+		displayFolder: Avisos
+		lineageTag: 368cabac-b9f5-48b9-8081-f0c36bd03c00
+
+	/// Texto quando a receita líquida é zero.
+	measure 'Aviso Receita' =
+			IF ( COUNTROWS ( fato_indicadores ) = 1 && SUM ( fato_indicadores[receita_liquida] ) = 0,
+			    "Receita líquida zero (comum em holdings): margens não são calculadas." )
+		displayFolder: Avisos
+		lineageTag: 072eac1c-3a0e-4707-a885-25dff5725e2f
+
+	/// Aviso fixo de dupla contagem e de uso como triagem.
+	measure 'Nota Metodológica' = "Z''-EM e Fleuriet são indicadores de triagem, não previsão de default. Controladoras e controladas listadas aparecem como empresas separadas, o que pode contar o mesmo grupo mais de uma vez nas medianas setoriais."
+		displayFolder: Avisos
+		lineageTag: 0b5b3677-ddb0-457e-a41d-7098fff29bab
+
+	/// Limite inferior da zona cinzenta do Z''-EM.
+	measure 'Limite Risco' = 4.15
+		formatString: 0.00
+		displayFolder: Scores
+		lineageTag: e6303393-3900-4f97-b375-bac9622fbbf1
+
+	/// Limite superior da zona cinzenta do Z''-EM.
+	measure 'Limite Segura' = 5.85
+		formatString: 0.00
+		displayFolder: Scores
+		lineageTag: 203e140c-9792-4729-9f19-cd8c7fe78252
+
+	/// Valor do índice escolhido em dim_indice; combine com o grupo Benchmark.
+	measure 'Valor do Índice' =
+			SWITCH (
+			    SELECTEDVALUE ( dim_indice[ordem] ),
+			    1, [Liquidez Corrente],
+			    2, [Liquidez Seca],
+			    3, [Endividamento Geral],
+			    4, [Dívida Líquida / PL],
+			    5, [Cobertura de Juros],
+			    6, [Margem EBIT],
+			    7, [Margem Líquida],
+			    8, [ROA],
+			    9, [ROE],
+			    10, [Z''-EM]
+			)
+		displayFolder: Benchmark
+		lineageTag: 39f44b97-746b-4c9a-b4e8-daf4b19e3b74
+
+		formatStringDefinition = SELECTEDVALUE ( dim_indice[formato], "0.00" )
+
+	/// Fórmula do índice escolhido (tooltip).
+	measure 'Fórmula do Índice' = SELECTEDVALUE ( dim_indice[formula] )
+		displayFolder: Benchmark
+		lineageTag: 7ce37f3a-9a49-4709-92d7-837f6ce4061d
+
+	/// Direção de leitura do índice escolhido (tooltip).
+	measure 'Leitura do Índice' = SELECTEDVALUE ( dim_indice[leitura] )
+		displayFolder: Benchmark
+		lineageTag: ae1fefa1-9059-48c6-abe9-92f023f3cb3e
+
+	/// Número de empresas distintas no contexto.
+	measure Empresas = DISTINCTCOUNT ( fato_indicadores[cd_cvm] )
+		formatString: 0
+		displayFolder: Triagem
+		lineageTag: bafb64b8-9305-46fd-885b-e812507f239e
+
+	/// Número de linhas empresa-ano no contexto.
+	measure Empresas-Ano = COUNTROWS ( fato_indicadores )
+		formatString: #,0
+		displayFolder: Triagem
+		lineageTag: 89adcb6d-2f28-4a2b-acdc-da976cc5b674
+
+	/// Empresas no ano menos empresas no ano anterior, no mesmo filtro (ex.: mesma zona).
+	measure 'Δ Empresas vs Ano Anterior' =
+			VAR _ano = MAX ( dim_ano[ano] )
+			VAR _anterior = CALCULATE ( [Empresas], dim_ano[ano] = _ano - 1 )
+			RETURN IF ( HASONEVALUE ( dim_ano[ano] ) && NOT ISBLANK ( _anterior ), [Empresas] - _anterior )
+		formatString: +0;-0;0
+		displayFolder: Triagem
+		lineageTag: c21c60ef-d9b1-4c72-9559-136b2ae6a06a
+
+	/// Z do ano menos Z do ano anterior, mesma empresa.
+	measure 'Δ Z''''-EM' =
+			VAR _ano = MAX ( dim_ano[ano] )
+			VAR _atual = [Z''-EM]
+			VAR _anterior = CALCULATE ( [Z''-EM], dim_ano[ano] = _ano - 1 )
+			RETURN IF ( NOT ISBLANK ( _atual ) && NOT ISBLANK ( _anterior ), _atual - _anterior )
+		formatString: +0.00;-0.00;0.00
+		displayFolder: Scores
+		lineageTag: 776e7063-75db-48f5-ac9d-6e0f2d15676e
+
+	/// Empresas-ano na zona risco / empresas-ano com Z calculado (exclui indeterminada).
+	measure '% em Risco' =
+			DIVIDE (
+			    CALCULATE ( COUNTROWS ( fato_indicadores ), dim_zona[zona] = "risco" ),
+			    CALCULATE ( COUNTROWS ( fato_indicadores ), dim_zona[zona] <> "indeterminada" )
+			)
+		formatString: 0.0%
+		displayFolder: Triagem
+		lineageTag: 3cbbd58a-5bb3-446a-966e-7ec0d5dc07a7
+
+	/// Empresas-ano com alerta / empresas-ano com histórico comparável (nulos fora do denominador).
+	measure '% com Efeito Tesoura' =
+			DIVIDE (
+			    CALCULATE ( COUNTROWS ( fato_indicadores ), fato_indicadores[efeito_tesoura] = TRUE () ),
+			    CALCULATE ( COUNTROWS ( fato_indicadores ), NOT ISBLANK ( fato_indicadores[efeito_tesoura] ) )
+			)
+		formatString: 0.0%
+		displayFolder: Triagem
+		lineageTag: 7a012643-1318-4d6b-83df-b0f929e46eb8
+
+	/// Empresas que estavam na zona de origem (linhas) no ano base e estão na zona da coluna no ano selecionado.
+	measure 'Migração de Zona' =
+			VAR _anoBase = SELECTEDVALUE ( ano_base[ano_base] )
+			VAR _origem = SELECTEDVALUE ( zona_origem[zona_origem] )
+			VAR _destino = VALUES ( fato_indicadores[cd_cvm] )
+			VAR _naOrigem =
+			    CALCULATETABLE (
+			        VALUES ( fato_indicadores[cd_cvm] ),
+			        dim_ano[ano] = _anoBase,
+			        dim_zona[zona] = _origem
+			    )
+			RETURN
+			    IF ( NOT ISBLANK ( _anoBase ) && NOT ISBLANK ( _origem ),
+			        COUNTROWS ( INTERSECT ( _destino, _naOrigem ) ) )
+		formatString: 0
+		displayFolder: Triagem
+		lineageTag: 040872ed-7c33-4251-aa34-3bffe318715a
+
+	/// Cor hexadecimal da zona, para formatação condicional.
+	measure 'Cor da Zona' =
+			VAR _z = COALESCE ( [Zona], SELECTEDVALUE ( dim_zona[zona] ) )
+			RETURN SWITCH ( _z, "segura", "#2E7D32", "cinzenta", "#F9A825", "risco", "#C62828", "indeterminada", "#9E9E9E" )
+		displayFolder: Triagem
+		lineageTag: 8778f620-9621-4ddf-8c45-69f3fa6a1aa4
+
+	/// Registros no log de qualidade do pipeline.
+	measure 'Problemas de Qualidade' = COUNTROWS ( qualidade )
+		formatString: #,0
+		displayFolder: Qualidade
+		lineageTag: 462f6863-38ab-410e-ab75-d0d092040945
+
+	/// Empresas distintas excluídas na etapa de filtro.
+	measure 'Empresas Excluídas' = CALCULATE ( DISTINCTCOUNT ( qualidade[cd_cvm] ), qualidade[etapa] = "filtro" )
+		formatString: 0
+		displayFolder: Qualidade
+		lineageTag: 28d64758-4cda-4a09-86e7-d0f2436fc05b
+
+	column _
+		isHidden
+		isNameInferred
+		sourceColumn: [_]
+
+	partition Medidas = calculated
+		mode: import
+		source = ROW ( "_", BLANK () )
+

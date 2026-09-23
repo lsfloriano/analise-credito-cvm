@@ -1,0 +1,54 @@
+table dim_indice
+	lineageTag: e5974e2e-642f-4c69-bce8-648ac04cbb9c
+
+	column ordem
+		isHidden
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [ordem]
+
+	column indice
+		isNameInferred
+		sourceColumn: [indice]
+		sortByColumn: ordem
+
+	column formato
+		isHidden
+		isNameInferred
+		sourceColumn: [formato]
+
+	column formula
+		isNameInferred
+		sourceColumn: [formula]
+
+	column leitura
+		isNameInferred
+		sourceColumn: [leitura]
+
+	partition dim_indice = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "ordem", INTEGER, "indice", STRING, "formato", STRING, "formula", STRING, "leitura", STRING,
+				    {
+				        { 1, "Liquidez Corrente", "0.00", "Ativo Circulante / Passivo Circulante",
+				          "Maior é melhor. Abaixo de 1, o ativo de curto prazo não cobre o passivo de curto prazo." },
+				        { 2, "Liquidez Seca", "0.00", "(Ativo Circulante - Estoques) / Passivo Circulante",
+				          "Maior é melhor. Liquidez sem depender da venda dos estoques." },
+				        { 3, "Endividamento Geral", "0.0%", "(Passivo Circulante + Passivo Não Circulante) / Ativo Total",
+				          "Menor é melhor. Parcela do ativo financiada por terceiros." },
+				        { 4, "Dívida Líquida / PL", "0.00", "(Empréstimos CP + Empréstimos LP - Caixa - Aplicações) / PL",
+				          "Menor é melhor. Negativo indica caixa líquido. Em branco se PL <= 0." },
+				        { 5, "Cobertura de Juros", "0.0""x""", "EBIT / |Despesas Financeiras|",
+				          "Maior é melhor. Abaixo de 1x, o resultado operacional não paga os juros. Em holdings o EBIT inclui equivalência patrimonial." },
+				        { 6, "Margem EBIT", "0.0%", "EBIT / Receita Líquida",
+				          "Maior é melhor. Em branco se a receita for zero (comum em holdings). Em holdings o EBIT inclui equivalência patrimonial." },
+				        { 7, "Margem Líquida", "0.0%", "Lucro Líquido / Receita Líquida",
+				          "Maior é melhor. Em branco se a receita for zero." },
+				        { 8, "ROA", "0.0%", "Lucro Líquido / Ativo Total", "Maior é melhor." },
+				        { 9, "ROE", "0.0%", "Lucro Líquido / PL", "Maior é melhor. Em branco se PL <= 0." },
+				        { 10, "Z''-EM", "0.00", "3,25 + 6,56·X1 + 3,26·X2 + 6,72·X3 + 1,05·X4",
+				          "Maior é melhor. Acima de 5,85 segura; 4,15 a 5,85 cinzenta; abaixo de 4,15 risco. Indicador de triagem, não previsão." }
+				    }
+				)
+

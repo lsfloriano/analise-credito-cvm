@@ -1,6 +1,7 @@
 model Model
 	culture: pt-BR
 	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
 	sourceQueryCulture: pt-BR
 	valueFilterBehavior: independent
 	dataAccessOptions
@@ -14,6 +15,16 @@ annotation PBI_QueryOrder = ["fato_indicadores"]
 annotation PBI_ProTooling = ["MCP-PBIModeling","DevMode"]
 
 ref table fato_indicadores
+ref table dim_empresa
+ref table dim_setor
+ref table qualidade
+ref table dim_ano
+ref table dim_zona
+ref table Medidas
+ref table dim_indice
+ref table ano_base
+ref table zona_origem
+ref table Benchmark
 
 ref cultureInfo pt-BR
 

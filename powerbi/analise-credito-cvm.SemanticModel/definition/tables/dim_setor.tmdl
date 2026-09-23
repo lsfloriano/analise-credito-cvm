@@ -1,0 +1,16 @@
+table dim_setor
+	lineageTag: 15b62b3d-8ac5-4303-8811-33d8b951c26c
+
+	column setor
+		dataType: string
+		lineageTag: c8423705-97bf-4f5c-961b-1ea4acb9eae5
+		sourceColumn: setor
+
+	partition dim_setor = m
+		mode: import
+		source =
+				let
+				    Fonte = Parquet.Document(File.Contents(PastaDados & "dim_setor.parquet"))
+				in
+				    Fonte
+

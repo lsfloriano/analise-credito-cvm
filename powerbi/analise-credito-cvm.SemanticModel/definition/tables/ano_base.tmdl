@@ -1,0 +1,14 @@
+/// Cópia desconectada de dim_ano: ano base da matriz de migração.
+table ano_base
+	lineageTag: aab2d1cf-6d9e-48d1-93c7-9c165c5d642a
+
+	column ano_base
+		formatString: 0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [ano_base]
+
+	partition ano_base = calculated
+		mode: import
+		source = SELECTCOLUMNS ( dim_ano, "ano_base", dim_ano[ano] )
+

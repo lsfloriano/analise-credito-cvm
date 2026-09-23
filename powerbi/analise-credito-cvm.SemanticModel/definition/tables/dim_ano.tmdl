@@ -1,0 +1,13 @@
+table dim_ano
+	lineageTag: 35cc15cf-7152-412f-98cd-343d0b5e72e7
+
+	column ano
+		formatString: 0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [ano]
+
+	partition dim_ano = calculated
+		mode: import
+		source = SELECTCOLUMNS ( GENERATESERIES ( MIN ( fato_indicadores[ano] ), MAX ( fato_indicadores[ano] ), 1 ), "ano", [Value] )
+
