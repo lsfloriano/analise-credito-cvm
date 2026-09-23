@@ -1,6 +1,15 @@
 from pathlib import Path
 
 import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
+
+
+def _tabela(df):
+    t = pa.Table.from_pandas(df.reset_index(drop=True), preserve_index=False)
+    campos = [pa.field(f.name, pa.string()) if pa.types.is_large_string(f.type) or pa.types.is_null(f.type) else f
+              for f in t.schema]
+    return t.cast(pa.schema(campos, metadata=t.schema.metadata))
 
 
 def exportar(fato, cadastro, problemas, out_dir):
@@ -21,6 +30,6 @@ def exportar(fato, cadastro, problemas, out_dir):
     caminhos = {}
     for nome, df in tabelas.items():
         caminho = out_dir / f"{nome}.parquet"
-        df.reset_index(drop=True).to_parquet(caminho, index=False)
+        pq.write_table(_tabela(df), caminho)
         caminhos[nome] = caminho
     return caminhos
