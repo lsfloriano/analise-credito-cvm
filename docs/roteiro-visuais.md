@@ -107,7 +107,7 @@ Pergunta: *o que ficou de fora do pipeline, e por quê?*
 |---|---|---|---|
 | 1 | Cartões (novo) ×2 | `[Problemas de Qualidade]`, `[Empresas Excluídas]` | — |
 | 2 | Colunas empilhadas "Problemas por ano" | Eixo X `qualidade[ano]`; Legenda `qualidade[etapa]`; Y `[Problemas de Qualidade]` | — |
-| 3 | Barras "Problemas por tipo" | Eixo Y `qualidade[problema]`; X `[Problemas de Qualidade]` | ordenar decrescente |
+| 3 | Barras "Problemas por tipo" | Eixo Y `qualidade[tipo_problema]`; X `[Problemas de Qualidade]`; dica de ferramenta `qualidade[problema]` | ordenar decrescente; rótulos de dados ligados. `tipo_problema` junta "conta ausente: …" e "duplicata com valores divergentes: …" numa barra cada |
 | 4 | Tabela | `qualidade[nome]`, `qualidade[cd_cvm]`, `qualidade[ano]`, `qualidade[etapa]`, `qualidade[problema]` | segmentação `qualidade[etapa]` ao lado |
 | 5 | Caixa de texto | "Setores financeiros (bancos, seguradoras) ficam fora por terem layout de demonstrativo diferente. 'Sem cadastro' são emissores estrangeiros e um caso de código CVM divergente (Multilaser). Contas ausentes e duplicatas divergentes da fonte ficam registradas, não corrigidas." | fonte 10 |
 

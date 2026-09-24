@@ -30,6 +30,13 @@ table qualidade
 		lineageTag: 1c7b9908-44b5-434d-ab84-d0dd637ee13c
 		sourceColumn: problema
 
+	/// Problema sem o nome da conta (ex.: 'conta ausente: fco' -> 'conta ausente'). Use em gráficos; o detalhe fica em qualidade[problema].
+	column tipo_problema =
+			VAR _p = qualidade[problema]
+			VAR _pos = SEARCH ( ":", _p, 1, 0 )
+			RETURN IF ( _pos > 0, LEFT ( _p, _pos - 1 ), _p )
+		lineageTag: 1b20e932-1e51-409d-9ded-4db2687c73ae
+
 	partition qualidade = m
 		mode: import
 		source =

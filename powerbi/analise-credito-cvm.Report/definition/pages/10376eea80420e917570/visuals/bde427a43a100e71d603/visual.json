@@ -48,23 +48,5 @@
       }
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "e9313f0a6097eb0da236",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "fato_indicadores"
-              }
-            },
-            "Property": "zona"
-          }
-        },
-        "type": "Categorical"
-      }
-    ]
   }
 }

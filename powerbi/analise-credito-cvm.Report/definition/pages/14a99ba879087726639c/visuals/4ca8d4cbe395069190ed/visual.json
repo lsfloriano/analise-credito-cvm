@@ -1,0 +1,94 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "4ca8d4cbe395069190ed",
+  "position": {
+    "x": 804.94690525080671,
+    "y": 97.323555294807861,
+    "z": 4000,
+    "height": 954.98738633030223,
+    "width": 798.8641830448812,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "qualidade"
+                    }
+                  },
+                  "Property": "nome"
+                }
+              },
+              "queryRef": "qualidade.nome",
+              "nativeQueryRef": "nome"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "qualidade"
+                    }
+                  },
+                  "Property": "cd_cvm"
+                }
+              },
+              "queryRef": "qualidade.cd_cvm",
+              "nativeQueryRef": "cd_cvm"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "qualidade"
+                    }
+                  },
+                  "Property": "ano"
+                }
+              },
+              "queryRef": "qualidade.ano",
+              "nativeQueryRef": "ano"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "qualidade"
+                    }
+                  },
+                  "Property": "problema"
+                }
+              },
+              "queryRef": "qualidade.problema",
+              "nativeQueryRef": "problema"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "qualidade"
+                    }
+                  },
+                  "Property": "etapa"
+                }
+              },
+              "queryRef": "qualidade.etapa",
+              "nativeQueryRef": "etapa"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
