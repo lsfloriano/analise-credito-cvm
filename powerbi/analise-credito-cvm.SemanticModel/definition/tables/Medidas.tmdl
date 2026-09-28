@@ -222,8 +222,8 @@ table Medidas
 	/// Empresas-ano na zona risco / empresas-ano com Z calculado (exclui indeterminada).
 	measure '% em Risco' =
 			DIVIDE (
-			    CALCULATE ( COUNTROWS ( fato_indicadores ), dim_zona[zona] = "risco" ),
-			    CALCULATE ( COUNTROWS ( fato_indicadores ), dim_zona[zona] <> "indeterminada" )
+			    CALCULATE ( COUNTROWS ( fato_indicadores ), REMOVEFILTERS ( dim_zona ), dim_zona[zona] = "risco" ),
+			    CALCULATE ( COUNTROWS ( fato_indicadores ), REMOVEFILTERS ( dim_zona ), dim_zona[zona] <> "indeterminada" )
 			)
 		formatString: 0.0%
 		displayFolder: Triagem
@@ -247,8 +247,9 @@ table Medidas
 			VAR _naOrigem =
 			    CALCULATETABLE (
 			        VALUES ( fato_indicadores[cd_cvm] ),
-			        dim_ano[ano] = _anoBase,
-			        dim_zona[zona] = _origem
+			        REMOVEFILTERS ( dim_zona ),  -- tira também dim_zona[ordem], que o visual agrupa por causa da ordenação
+			        dim_zona[zona] = _origem,
+			        dim_ano[ano] = _anoBase
 			    )
 			RETURN
 			    IF ( NOT ISBLANK ( _anoBase ) && NOT ISBLANK ( _origem ),
@@ -276,8 +277,46 @@ table Medidas
 		displayFolder: Qualidade
 		lineageTag: 28d64758-4cda-4a09-86e7-d0f2436fc05b
 
+	/// Z''-EM limitado a −25 e +25 para gráficos, ícones e ordenação; fora da faixa mostra "< -25" ou "> 25". O valor real está em [Z''-EM]; zona e medianas usam o real.
+	measure 'Z''''-EM (exibição)' =
+			VAR _z = [Z''-EM]
+			RETURN IF ( NOT ISBLANK ( _z ), MAX ( -25, MIN ( 25, _z ) ) )
+		displayFolder: Scores
+		lineageTag: d9bb242e-3651-4932-9926-eb63802209e2
+
+		formatStringDefinition =
+				VAR _z = [Z''-EM]
+				RETURN
+				    SWITCH ( TRUE (),
+				        _z < -25, """< -25""",
+				        _z > 25, """> 25""",
+				        "0.00" )
+
+	/// Δ Z''-EM só quando o Z do ano e o do ano anterior estão entre −25 e +25; em branco se faltar o ano anterior ou se algum dos dois estiver fora da escala.
+	measure 'Δ Z''''-EM (exibição)' =
+			VAR _ano = MAX ( dim_ano[ano] )
+			VAR _atual = [Z''-EM]
+			VAR _anterior = CALCULATE ( [Z''-EM], dim_ano[ano] = _ano - 1 )
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _atual ) && NOT ISBLANK ( _anterior )
+			            && ABS ( _atual ) <= 25 && ABS ( _anterior ) <= 25,
+			        _atual - _anterior
+			    )
+		formatString: +0.00;-0.00;0.00
+		displayFolder: Scores
+		lineageTag: 4b2eb684-a2f1-46dd-9a66-05425b264da0
+
+	/// Marca empresa-ano com |Z''-EM| > 25, em geral ativo irrisório ou passivo exigível quase zero; mostra o Z real.
+	measure 'Fora da Escala' =
+			VAR _z = [Z''-EM]
+			RETURN IF ( NOT ISBLANK ( _z ) && ABS ( _z ) > 25, "Z real: " & FORMAT ( _z, "#,0.00" ) )
+		displayFolder: Avisos
+		lineageTag: 0224d4a6-b915-4ce2-bed1-956aef05d930
+
 	column _
 		isHidden
+		lineageTag: 32b3b0f3-e189-470f-95e8-59d85c2e418d
 		isNameInferred
 		sourceColumn: [_]
 

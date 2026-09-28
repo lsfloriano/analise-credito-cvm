@@ -21,7 +21,7 @@
                   {
                     "value": "Setores financeiros (bancos, seguradoras) ficam fora por terem layout de demonstrativo diferente. 'Sem cadastro' são emissores estrangeiros e um caso de código CVM divergente (Multilaser). Contas ausentes e duplicatas divergentes da fonte ficam registradas, não corrigidas.",
                     "textStyle": {
-                      "fontSize": "20pt"
+                      "fontSize": "12pt"
                     }
                   }
                 ]

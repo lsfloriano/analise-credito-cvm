@@ -23,11 +23,11 @@
                       "Entity": "qualidade"
                     }
                   },
-                  "Property": "problema"
+                  "Property": "tipo_problema"
                 }
               },
-              "queryRef": "qualidade.problema",
-              "nativeQueryRef": "problema",
+              "queryRef": "qualidade.tipo_problema",
+              "nativeQueryRef": "tipo_problema",
               "active": true
             }
           ]

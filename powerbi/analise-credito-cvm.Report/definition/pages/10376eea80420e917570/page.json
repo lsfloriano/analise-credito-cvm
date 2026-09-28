@@ -1,8 +1,30 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
   "name": "10376eea80420e917570",
-  "displayName": "Página 1",
+  "displayName": "Triagem de Risco",
   "displayOption": "FitToPage",
   "height": 1080,
-  "width": 1920
+  "width": 1920,
+  "visualInteractions": [
+    {
+      "source": "465beaa6b87753716787",
+      "target": "3518de39db82de3458a6",
+      "type": "DataFilter"
+    },
+    {
+      "source": "ed41d1106e68a387133e",
+      "target": "8a698f5c390c9ac8a8e0",
+      "type": "DataFilter"
+    },
+    {
+      "source": "465beaa6b87753716787",
+      "target": "8a698f5c390c9ac8a8e0",
+      "type": "DataFilter"
+    },
+    {
+      "source": "465beaa6b87753716787",
+      "target": "ed41d1106e68a387133e",
+      "type": "NoFilter"
+    }
+  ]
 }

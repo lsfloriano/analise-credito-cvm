@@ -3,6 +3,7 @@ table dim_ano
 
 	column ano
 		formatString: 0
+		lineageTag: 0ff9dff4-72be-4e1a-8537-197daaa1ceac
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [ano]

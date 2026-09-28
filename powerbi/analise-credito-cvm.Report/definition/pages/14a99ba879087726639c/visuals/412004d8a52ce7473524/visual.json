@@ -28,7 +28,7 @@
               },
               "queryRef": "Medidas.Problemas de Qualidade",
               "nativeQueryRef": "Problemas de Qualidade",
-              "format": "G"
+              "format": "0"
             }
           ]
         }

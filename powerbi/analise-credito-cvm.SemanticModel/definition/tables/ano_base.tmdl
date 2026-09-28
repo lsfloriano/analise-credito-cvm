@@ -4,6 +4,7 @@ table ano_base
 
 	column ano_base
 		formatString: 0
+		lineageTag: baba05d5-de8d-4bc9-a874-d926687619dc
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [ano_base]

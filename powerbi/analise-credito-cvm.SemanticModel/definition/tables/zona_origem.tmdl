@@ -3,12 +3,14 @@ table zona_origem
 	lineageTag: 32035dd6-4c1c-4217-bac2-6443a8ca8c33
 
 	column zona_origem
+		lineageTag: dd85af0b-b32b-43bc-935d-bcfdda471986
 		isNameInferred
 		sourceColumn: [zona_origem]
 		sortByColumn: ordem_origem
 
 	column ordem_origem
 		isHidden
+		lineageTag: 07b7bd7c-4243-48cb-bda7-1da3bb94ca5a
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [ordem_origem]

@@ -1,4 +1,5 @@
 table Benchmark
+	lineageTag: 6df11baa-9a6c-42d1-baed-f3f032b7d4b6
 
 	/// Compara a medida com o setor da empresa: mediana, quartis, percentil, quartil e variação anual.
 	calculationGroup
@@ -95,6 +96,7 @@ table Benchmark
 
 	column Comparação
 		dataType: string
+		lineageTag: 13db3cdc-a06a-4ac9-8c09-245c5261a4c3
 
 	partition Partition_Benchmark = calculationGroup
 
