@@ -1682,6 +1682,16 @@ cultureInfo pt-BR
 			          "limite risco": {
 			            "State": "Generated"
 			          }
+			        },
+			        {
+			          "Limite zona de risco (4,15)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
 			        }
 			      ]
 			    },
@@ -1697,6 +1707,16 @@ cultureInfo pt-BR
 			        {
 			          "limite segura": {
 			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Limite zona segura (5,85)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
 			          }
 			        }
 			      ]
@@ -1787,7 +1807,7 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "medida.δ_empresas_vs_ano_anterior": {
+			    "medida.vs_ano_anterior": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "Medidas",
@@ -1797,7 +1817,7 @@ cultureInfo pt-BR
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "δ empresas vs ano anterior": {
+			          "vs ano anterior": {
 			            "State": "Generated"
 			          }
 			        }
@@ -2574,20 +2594,17 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "medida.entity__δ_empresas_vs_ano_anterior_FormatString": {
+			    "medida.empresa_selecionada": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "Medidas",
-			          "ConceptualProperty": "_Δ Empresas vs Ano Anterior FormatString"
+			          "ConceptualProperty": "Empresa Selecionada"
 			        }
 			      },
 			      "State": "Generated",
-			      "Visibility": {
-			        "Value": "Hidden"
-			      },
 			      "Terms": [
 			        {
-			          "_δ empresas vs ano anterior FormatString": {
+			          "empresa selecionada": {
 			            "State": "Generated"
 			          }
 			        }
@@ -2868,6 +2885,16 @@ cultureInfo pt-BR
 			        {
 			          "indice": {
 			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Índice": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
 			          }
 			        }
 			      ]
@@ -3336,6 +3363,133 @@ cultureInfo pt-BR
 			          }
 			        }
 			      ]
+			    },
+			    "medida.detalhe_da_empresa": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Detalhe da Empresa"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "detalhe da empresa": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "medida.nome_do_índice": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Nome do Índice"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nome do índice": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "medida.entity__vs_ano_anterior_FormatString": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "_vs Ano Anterior FormatString"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "_vs ano anterior FormatString": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "medida.entity__empresa_selecionada_FormatString": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "_Empresa Selecionada FormatString"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "_empresa selecionada FormatString": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "medida.entity__detalhe_da_empresa_FormatString": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "_Detalhe da Empresa FormatString"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "_detalhe da empresa FormatString": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "medida.entity__nome_do_índice_FormatString": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "_Nome do Índice FormatString"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "_nome do índice FormatString": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "benchmark.ordem": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Benchmark",
+			          "ConceptualProperty": "Ordem"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "ordem": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
 			    }
 			  },
 			  "Relationships": {
@@ -3474,6 +3628,72 @@ cultureInfo pt-BR
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "dim_empresas_have_fato_indicadores"
+			        }
+			      ]
+			    },
+			    "dim_indice_has_medida_nome_do_índice": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_indice"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_indice": {
+			          "Target": {
+			            "Entity": "dim_indice"
+			          }
+			        },
+			        "medida.nome_do_índice": {
+			          "Target": {
+			            "Entity": "medida.nome_do_índice"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_indice"
+			            },
+			            "Object": {
+			              "Role": "medida.nome_do_índice"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_indices_have_nome_do_índice"
+			        }
+			      ]
+			    },
+			    "dim_empresa_has_medida_detalhe_da_empresa": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_empresa"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_empresa": {
+			          "Target": {
+			            "Entity": "dim_empresa"
+			          }
+			        },
+			        "medida.detalhe_da_empresa": {
+			          "Target": {
+			            "Entity": "medida.detalhe_da_empresa"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_empresa"
+			            },
+			            "Object": {
+			              "Role": "medida.detalhe_da_empresa"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_empresas_have_detalhe_da_empresa"
 			        }
 			      ]
 			    },
@@ -3685,6 +3905,39 @@ cultureInfo pt-BR
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "dim_indices_have_indices"
+			        }
+			      ]
+			    },
+			    "dim_empresa_has_medida_empresa_selecionada": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_empresa"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_empresa": {
+			          "Target": {
+			            "Entity": "dim_empresa"
+			          }
+			        },
+			        "medida.empresa_selecionada": {
+			          "Target": {
+			            "Entity": "medida.empresa_selecionada"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_empresa"
+			            },
+			            "Object": {
+			              "Role": "medida.empresa_selecionada"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_empresas_have_empresa_selecionada"
 			        }
 			      ]
 			    },
@@ -4117,7 +4370,7 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "fato_indicadore_has_medida_δ_empresas_vs_ano_anterior": {
+			    "fato_indicadore_has_medida_vs_ano_anterior": {
 			      "Binding": {
 			        "ConceptualEntity": "fato_indicadores"
 			      },
@@ -4128,9 +4381,9 @@ cultureInfo pt-BR
 			            "Entity": "fato_indicadore"
 			          }
 			        },
-			        "medida.δ_empresas_vs_ano_anterior": {
+			        "medida.vs_ano_anterior": {
 			          "Target": {
-			            "Entity": "medida.δ_empresas_vs_ano_anterior"
+			            "Entity": "medida.vs_ano_anterior"
 			          }
 			        }
 			      },
@@ -4141,16 +4394,16 @@ cultureInfo pt-BR
 			              "Role": "fato_indicadore"
 			            },
 			            "Object": {
-			              "Role": "medida.δ_empresas_vs_ano_anterior"
+			              "Role": "medida.vs_ano_anterior"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "fato_indicadores_have_δ_empresas_vs_ano_anterior"
+			          "ID": "fato_indicadores_have_vs_ano_anterior"
 			        }
 			      ]
 			    },
-			    "dim_ano_has_medida_δ_empresas_vs_ano_anterior": {
+			    "dim_ano_has_medida_vs_ano_anterior": {
 			      "Binding": {
 			        "ConceptualEntity": "dim_ano"
 			      },
@@ -4161,9 +4414,9 @@ cultureInfo pt-BR
 			            "Entity": "dim_ano"
 			          }
 			        },
-			        "medida.δ_empresas_vs_ano_anterior": {
+			        "medida.vs_ano_anterior": {
 			          "Target": {
-			            "Entity": "medida.δ_empresas_vs_ano_anterior"
+			            "Entity": "medida.vs_ano_anterior"
 			          }
 			        }
 			      },
@@ -4174,12 +4427,12 @@ cultureInfo pt-BR
 			              "Role": "dim_ano"
 			            },
 			            "Object": {
-			              "Role": "medida.δ_empresas_vs_ano_anterior"
+			              "Role": "medida.vs_ano_anterior"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "dim_anos_have_δ_empresas_vs_ano_anterior"
+			          "ID": "dim_anos_have_vs_ano_anterior"
 			        }
 			      ]
 			    },

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "3e2dfcbfb3d260aa9d22",
   "position": {
-    "x": 1349.0574889444338,
-    "y": 479.6123822341857,
-    "z": 3005,
-    "height": 434.722553355124,
-    "width": 533.95270140357616,
-    "tabOrder": 3005
+    "x": 146.66666666666666,
+    "y": 552.7919131686956,
+    "z": 7000,
+    "height": 404.44444444444446,
+    "width": 653.33333333333337,
+    "tabOrder": 7000
   },
   "visual": {
     "visualType": "pivotTable",
@@ -46,8 +46,9 @@
                 }
               },
               "queryRef": "dim_indice.indice",
-              "nativeQueryRef": "indice",
-              "active": true
+              "nativeQueryRef": "Índice",
+              "active": true,
+              "displayName": "Índice"
             }
           ]
         },
@@ -70,6 +71,44 @@
           ]
         }
       }
+    },
+    "objects": {
+      "subTotals": [
+        {
+          "properties": {
+            "columnSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "rowSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnFormatting": [
+        {
+          "properties": {
+            "styleHeader": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Medidas.Valor do Índice"
+          }
+        }
+      ]
     },
     "visualContainerObjects": {
       "visualTooltip": [
@@ -130,20 +169,6 @@
   },
   "filterConfig": {
     "filters": [
-      {
-        "name": "e03034db0606901da48c",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_indice"
-              }
-            },
-            "Property": "indice"
-          }
-        },
-        "type": "Categorical"
-      },
       {
         "name": "50400fe0164d50de0b8a",
         "field": {
@@ -217,20 +242,6 @@
             }
           ]
         }
-      },
-      {
-        "name": "193d0d645949e76c2e0d",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Medidas"
-              }
-            },
-            "Property": "Valor do Índice"
-          }
-        },
-        "type": "Advanced"
       }
     ]
   }

@@ -84,5 +84,17 @@
     ],
     "acceptsFilterContext": "None"
   },
-  "type": "Drillthrough"
+  "type": "Drillthrough",
+  "visualInteractions": [
+    {
+      "source": "e17717d5076d778dd801",
+      "target": "6c408c802c6078d76531",
+      "type": "NoFilter"
+    },
+    {
+      "source": "e17717d5076d778dd801",
+      "target": "1237eb2d39600baeb232",
+      "type": "NoFilter"
+    }
+  ]
 }
