@@ -55,7 +55,8 @@
                 }
               },
               "queryRef": "Medidas.Z''-EM (exibição)",
-              "nativeQueryRef": "Z''-EM (exibição)"
+              "nativeQueryRef": "Z''-EM",
+              "displayName": "Z''-EM"
             },
             {
               "field": {
@@ -69,7 +70,8 @@
                 }
               },
               "queryRef": "Medidas.Fora da Escala",
-              "nativeQueryRef": "Fora da Escala"
+              "nativeQueryRef": "Z real",
+              "displayName": "Z real"
             },
             {
               "field": {
@@ -111,7 +113,8 @@
                 }
               },
               "queryRef": "Medidas.Δ Z''-EM (exibição)",
-              "nativeQueryRef": "Δ Z''-EM (exibição)"
+              "nativeQueryRef": "Δ Z''-EM",
+              "displayName": "Δ Z''-EM"
             },
             {
               "field": {
@@ -143,7 +146,7 @@
                 "Property": "Z''-EM (exibição)"
               }
             },
-            "direction": "Descending"
+            "direction": "Ascending"
           }
         ]
       }
@@ -362,124 +365,66 @@
             }
           }
         }
+      ],
+      "columnFormatting": [
+        {
+          "properties": {
+            "styleHeader": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "dim_empresa.empresa"
+          }
+        },
+        {
+          "properties": {
+            "styleHeader": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Medidas.Z''-EM (exibição)"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Empresas por Z''''-EM'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Z limitado a ±25'"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "d601bd8970d25b244730",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_empresa"
-              }
-            },
-            "Property": "empresa"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "5e9ec4f404e00e1c2096",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_setor"
-              }
-            },
-            "Property": "setor"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "f4d67f2a40a9c770443b",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Medidas"
-              }
-            },
-            "Property": "Zona"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "38ba563a7256c0d10cad",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Medidas"
-              }
-            },
-            "Property": "Tipo Fleuriet"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "04dfce7f919ab1815049",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Medidas"
-              }
-            },
-            "Property": "Efeito Tesoura"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "d06b9427ac48bb7ebb55",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Medidas"
-              }
-            },
-            "Property": "Z''-EM (exibição)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "838974c373e74e06b000",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Medidas"
-              }
-            },
-            "Property": "Δ Z''-EM (exibição)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "c167a712e09d94a72c20",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Medidas"
-              }
-            },
-            "Property": "Fora da Escala"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

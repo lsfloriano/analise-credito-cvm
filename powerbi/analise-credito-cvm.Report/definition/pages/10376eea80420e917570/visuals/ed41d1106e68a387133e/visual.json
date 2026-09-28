@@ -46,8 +46,9 @@
                 }
               },
               "queryRef": "zona_origem.zona_origem",
-              "nativeQueryRef": "zona_origem",
-              "active": true
+              "nativeQueryRef": "Zona no ano base",
+              "active": true,
+              "displayName": "Zona no ano base"
             }
           ]
         },
@@ -69,6 +70,23 @@
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "zona_origem"
+                  }
+                },
+                "Property": "zona_origem"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
       }
     },
     "objects": {

@@ -201,7 +201,7 @@ table Medidas
 		lineageTag: 89adcb6d-2f28-4a2b-acdc-da976cc5b674
 
 	/// Empresas no ano menos empresas no ano anterior, no mesmo filtro (ex.: mesma zona).
-	measure 'Δ Empresas vs Ano Anterior' =
+	measure 'vs Ano Anterior' =
 			VAR _ano = MAX ( dim_ano[ano] )
 			VAR _anterior = CALCULATE ( [Empresas], dim_ano[ano] = _ano - 1 )
 			RETURN IF ( HASONEVALUE ( dim_ano[ano] ) && NOT ISBLANK ( _anterior ), [Empresas] - _anterior )
@@ -288,7 +288,7 @@ table Medidas
 				VAR _z = [Z''-EM]
 				RETURN
 				    SWITCH ( TRUE (),
-				        _z < -25, """< -25""",
+				        _z < -25, """< -25"";""< -25""",  -- 2 seções: a negativa não ganha o sinal de menos
 				        _z > 25, """> 25""",
 				        "0.00" )
 
@@ -313,6 +313,31 @@ table Medidas
 			RETURN IF ( NOT ISBLANK ( _z ) && ABS ( _z ) > 25, "Z real: " & FORMAT ( _z, "#,0.00" ) )
 		displayFolder: Avisos
 		lineageTag: 0224d4a6-b915-4ce2-bed1-956aef05d930
+
+	/// Nome (CD_CVM) da empresa em contexto; orienta o usuário quando nenhuma ou várias estão selecionadas.
+	measure 'Empresa Selecionada' =
+			SELECTEDVALUE (
+			    dim_empresa[empresa],
+			    "Selecione uma empresa: na Triagem, clique direito numa linha > Detalhamento > Ficha da empresa"
+			)
+		displayFolder: Ficha
+		lineageTag: 73f3dbda-3790-4302-86ae-27f0964fcd91
+
+	/// Setor, tipo de demonstrativo e situação na CVM da empresa em contexto.
+	measure 'Detalhe da Empresa' =
+			IF (
+			    HASONEVALUE ( dim_empresa[cd_cvm] ),
+			    SELECTEDVALUE ( dim_empresa[setor] )
+			        & "  ·  demonstrativo " & SELECTEDVALUE ( dim_empresa[tipo_demonstrativo] )
+			        & "  ·  situação CVM: " & SELECTEDVALUE ( dim_empresa[situacao] )
+			)
+		displayFolder: Ficha
+		lineageTag: 9eeaec10-138f-4833-8c2e-7f44dfe25db1
+
+	/// Nome do índice em contexto (dim_indice), para títulos dinâmicos e dicas de ferramenta.
+	measure 'Nome do Índice' = SELECTEDVALUE ( dim_indice[indice] )
+		displayFolder: Benchmark
+		lineageTag: 3c55b224-764f-4420-9bdc-031550066d1b
 
 	column _
 		isHidden

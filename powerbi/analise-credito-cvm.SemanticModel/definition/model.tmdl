@@ -10,7 +10,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["fato_indicadores"]
+annotation PBI_QueryOrder = ["fato_indicadores","dim_empresa","dim_setor","qualidade","PastaDados"]
 
 annotation PBI_ProTooling = ["MCP-PBIModeling","DevMode"]
 

@@ -2,3 +2,5 @@
 expression PastaDados = "C:\Users\LeonardoSantiagoFlor\projects\analise-credito-cvm\data\processed\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
 	lineageTag: e5e6df19-a50c-48f0-a259-33038a9ab81a
 
+	annotation PBI_ResultType = Text
+

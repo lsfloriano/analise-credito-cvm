@@ -27,8 +27,9 @@
                 }
               },
               "queryRef": "dim_setor.setor",
-              "nativeQueryRef": "setor",
-              "active": true
+              "nativeQueryRef": "Setor",
+              "active": true,
+              "displayName": "Setor"
             }
           ]
         }

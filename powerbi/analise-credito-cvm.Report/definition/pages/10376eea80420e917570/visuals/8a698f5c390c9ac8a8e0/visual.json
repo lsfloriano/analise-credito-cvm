@@ -27,8 +27,9 @@
                 }
               },
               "queryRef": "dim_ano.ano",
-              "nativeQueryRef": "ano",
-              "active": true
+              "nativeQueryRef": "Ano",
+              "active": true,
+              "displayName": "Ano"
             }
           ]
         }

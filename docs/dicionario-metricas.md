@@ -94,6 +94,14 @@ IF ( COUNTROWS ( fato_indicadores ) = 1,
 | Valor do Índice | O índice escolhido em `dim_indice[indice]`: um seletor que troca a medida (SWITCH). Formato vem de `dim_indice[formato]` | F, P |
 | Fórmula do Índice | Fórmula do índice escolhido, para tooltip | F |
 | Leitura do Índice | Direção de leitura (maior/menor é melhor) e ressalvas do índice escolhido, para tooltip | F |
+| Nome do Índice | Nome do índice em contexto, para títulos dinâmicos (com o grupo de cálculo, "valor do campo" só aceita medida) | F |
+
+## Ficha (pasta Ficha)
+
+| Medida | Definição | Páginas |
+|---|---|---|
+| Empresa Selecionada | "nome (CD_CVM)" da empresa em contexto; sem empresa, instrui a chegar pela Triagem via Detalhamento | F |
+| Detalhe da Empresa | Setor · tipo de demonstrativo · situação na CVM da empresa em contexto | F |
 
 Itens do grupo de cálculo `Benchmark[Comparação]`. Eles só transformam as
 medidas de índice (`[Valor do Índice]`, os 9 índices e `[Z''-EM]`); qualquer
