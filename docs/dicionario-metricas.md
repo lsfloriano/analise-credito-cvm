@@ -72,6 +72,8 @@ IF ( COUNTROWS ( fato_indicadores ) = 1,
 | Z''-EM | Altman Z''-EM para mercados emergentes, calculado no pipeline: `3,25 + 6,56·X1 + 3,26·X2 + 6,72·X3 + 1,05·X4`. X1 = capital de giro / AT; X2 = (reservas de lucros + lucros acumulados) / AT; X3 = EBIT / AT; X4 = PL / passivo exigível. **Triagem, não previsão**: o modelo foi calibrado fora do Brasil. | T, F |
 | Zona | segura (Z > 5,85), cinzenta (4,15 ≤ Z ≤ 5,85), risco (Z < 4,15), indeterminada (componente ausente ou passivo exigível zero, 29 empresas-ano) | T, F |
 | Δ Z''-EM | Z do ano − Z do ano anterior, mesma empresa; branco sem ano anterior | T |
+| Z''-EM (exibição) | O Z preso entre −25 e +25, para gráficos, ícones e ordenação. Fora da faixa aparece como "< -25" ou "> 25" (formato dinâmico). 434 empresas-ano (7%; 33 em 2025) estão fora, em geral por ativo irrisório (ex.: ativo de R$ 86) ou passivo exigível quase zero, que fazem os X explodirem. Zona e medianas usam o Z real | T, F |
+| Δ Z''-EM (exibição) | Δ Z só quando o Z do ano e o do anterior estão dentro de ±25; em branco se faltar o ano anterior **ou** se algum estiver fora da escala (um Δ de −5.643 não informa nada) | T |
 | Tipo Fleuriet | "I - Excelente" … "VI - Alto risco", pelos sinais de (CDG, NCG, T); zero conta como positivo | T, F |
 | Tipo Fleuriet (nº) | *Auxiliar, oculta.* O tipo de 1 a 6, usado na validação | — |
 | Limite Risco / Limite Segura | Constantes 4,15 e 5,85, para as linhas de referência do gráfico do Z | F |
@@ -129,6 +131,7 @@ caso está documentado em `docs/validacao-dax.md`.
 |---|---|---|
 | Aviso PL | PL ≤ 0 na empresa-ano | F |
 | Aviso Receita | Receita líquida = 0 na empresa-ano | F |
+| Fora da Escala | "Z real: …" quando \|Z\| > 25 (para a coluna ou tooltip ao lado de `[Z''-EM (exibição)]`) | T, F |
 | Nota Metodológica | Sempre: triagem, não previsão; dupla contagem controladora/controladas | T, P |
 
 ## Qualidade (pasta Qualidade)

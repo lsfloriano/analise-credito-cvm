@@ -16,6 +16,7 @@ Tolerância relativa e absoluta de 1e-6; branco no DAX = NaN no Python.
 | Mediana, Q1 e Q3 do setor para os 10 índices, por setor-ano | `benchmark` | 279 × 30 colunas | 0 |
 | Percentil no setor para os 10 índices, 2024 | `percentil` | 633 | 0 |
 | Matriz de migração de zona 2024 → 2025 | `migracao` | 11 células | 0 |
+| Matriz de migração 2015 → 2025, no formato do visual (com colunas de ordem), após o defeito 2 | `migracao` | 11 células | 0 |
 | Contagens por zona, % em risco, % com efeito tesoura, qualidade | manual | — | 0 |
 | Quartil e Δ vs ano anterior, WEG (5410) 2024, via `[Valor do Índice]` | manual | 70 | 0 |
 
@@ -63,6 +64,25 @@ RETURN MEDIANX ( _valores, [@v] )
 
 Mesmo padrão em Q1, Q3, Percentil e Quartil. Depois da correção: 0
 divergências em todas as verificações acima.
+
+## Defeito 2: coluna de ordenação na matriz de migração (2026-09-28)
+
+No relatório, a matriz de migração mostrava só a diagonal (74/54/81/1 para
+2015 → 2025), embora a validação de 2024 → 2025 tivesse passado. A consulta
+que o visual envia, capturada com trace, agrupa também por
+`zona_origem[ordem_origem]` e `dim_zona[ordem]`, as colunas de "classificar
+por coluna". `[Migração de Zona]` trocava só o filtro de `dim_zona[zona]`
+pela zona de origem, e o filtro de `dim_zona[ordem]` do destino continuava
+ativo, prendendo a origem à mesma zona do destino.
+
+Correção: `REMOVEFILTERS ( dim_zona )` antes de `dim_zona[zona] = _origem`
+(mesmo ajuste em `[% em Risco]`, por prevenção). Revalidado com a consulta no
+formato do visual (com as colunas de ordem), 2015 → 2025: 11 células, 0
+divergências.
+
+**Regra:** consultas de validação de medidas que filtram colunas de uma
+dimensão com "classificar por coluna" devem incluir a coluna de ordem no
+agrupamento, como o visual faz.
 
 ## Consultas
 
@@ -127,15 +147,15 @@ SUMMARIZECOLUMNS (
 )
 ```
 
-### Migração (`migracao --ano 2025 --ano-base 2024`)
+### Migração (`migracao --ano 2025 --ano-base 2015`)
 
 ```dax
 EVALUATE
 SUMMARIZECOLUMNS (
-    dim_zona[zona],
-    zona_origem[zona_origem],
+    dim_zona[zona], dim_zona[ordem],
+    zona_origem[zona_origem], zona_origem[ordem_origem],
     TREATAS ( { 2025 }, dim_ano[ano] ),
-    TREATAS ( { 2024 }, ano_base[ano_base] ),
+    TREATAS ( { 2015 }, ano_base[ano_base] ),
     "n", [Migração de Zona]
 )
 ```
