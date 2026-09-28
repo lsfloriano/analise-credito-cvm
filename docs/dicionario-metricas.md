@@ -95,8 +95,10 @@ IF ( COUNTROWS ( fato_indicadores ) = 1,
 | Fórmula do Índice | Fórmula do índice escolhido, para tooltip | F |
 | Leitura do Índice | Direção de leitura (maior/menor é melhor) e ressalvas do índice escolhido, para tooltip | F |
 
-Itens do grupo de cálculo `Benchmark[Comparação]`, que se aplicam a qualquer
-medida de índice ou score:
+Itens do grupo de cálculo `Benchmark[Comparação]`. Eles só transformam as
+medidas de índice (`[Valor do Índice]`, os 9 índices e `[Z''-EM]`); qualquer
+outra medida (textos, avisos, contagens) passa intacta, o que permite usar
+`[Fórmula do Índice]` numa dica de ferramenta sobre a matriz de benchmark:
 
 | Item | O que faz com a medida | Observações |
 |---|---|---|

@@ -65,19 +65,26 @@ piorando?*
 Tipo: Detalhamento*; campo de detalhamento `dim_empresa[empresa]`;
 **"Manter todos os filtros" desligado.** Assim só a empresa vem pelo
 detalhamento, e o ano vem da segmentação sincronizada (#2). Para montar sem
-detalhamento, arraste uma empresa para o poço de detalhamento (ex.: "WEG S.A.
+detalhamento, arraste uma empresa para o poço de detalhamento (ex.: "WEG SA
 (5410)").
 
 | # | Visual | Campos | Configuração |
 |---|---|---|---|
-| 1 | Cartão (novo), várias linhas | `dim_empresa[empresa]`, `dim_setor[setor]`, `dim_empresa[tipo_demonstrativo]`, `dim_empresa[situacao]` | cabeçalho, sem título |
+| 1 | Caixa de texto (ou cartão) "cabeçalho" | `[Empresa Selecionada]` (fonte 20, negrito) e, embaixo, `[Detalhe da Empresa]` (fonte 11, cinza) | sem título. Cartão com colunas de texto em Categorias vira lista de todas as empresas; use as medidas |
 | 2 | Segmentação | `dim_ano[ano]` | a sincronizada |
 | 3 | Cartões (novo) ×4 | `[Z''-EM]`, `[Zona]`, `[Tipo Fleuriet]`, `[Efeito Tesoura]` | `[Zona]` com cor do valor por valor de campo `[Cor da Zona]` |
-| 4 | Matriz "Índices vs setor" | Linhas `dim_indice[indice]`; Colunas `Benchmark[Comparação]`; Valores `[Valor do Índice]` | filtro do visual em `Benchmark[Comparação]`: Valor, Mediana do Setor, Quartil no Setor, Δ vs Ano Anterior. Dicas de ferramenta: `[Fórmula do Índice]`, `[Leitura do Índice]`. Desligue os totais. Cabeçalhos: "Empresa", "Mediana do setor", "Quartil (1–4)", "Δ ano". Os formatos (x, %, casas) já vêm do modelo |
+| 4 | Matriz "Índices vs setor" | Linhas `dim_indice[indice]`; Colunas `Benchmark[Comparação]`; Valores `[Valor do Índice]` | filtro do visual em `Benchmark[Comparação]`: Valor, Mediana do Setor, Quartil no Setor, Δ vs Ano Anterior. Dica de ferramenta: a matriz não tem poço de dicas; use a **página de dica "Dica - Índice"** (abaixo), em *Formatar visual → Geral → Dicas de ferramenta → Tipo: Página do relatório*. Desligue os totais. Cabeçalhos: "Empresa", "Mediana do setor", "Quartil (1–4)", "Δ ano". Os formatos (x, %, casas) já vêm do modelo |
 | 5 | Gráfico de linhas "Z''-EM ao longo do tempo" | Eixo X `dim_ano[ano]` (categórico); Y `[Z''-EM (exibição)]`, `[Limite Risco]`, `[Limite Segura]`; dica de ferramenta `[Z''-EM]` (valor real) | Eixo Y fixo de −25 a 25, para todas as empresas ficarem na mesma escala. **Editar interações:** a segmentação de ano (#2) → "nenhum" neste visual. Z em `#37474F` com marcadores; Limite Risco tracejado `#C62828`; Limite Segura tracejado `#2E7D32`; a faixa entre eles é a zona cinzenta (subtítulo "entre as linhas: zona cinzenta") |
 | 6 | Colunas agrupadas "Modelo Fleuriet" | Eixo X `dim_ano[ano]`; Y `[CDG]`, `[NCG]`, `[Saldo de Tesouraria]` | segmentação de ano → "nenhum" neste visual. Dica de ferramenta: `[Tipo Fleuriet]`. Legenda: "CDG", "NCG", "T". Rótulos de dados desligados (valores em R$ mi) |
 | 7 | Cartões de texto ×2 | `[Aviso PL]`, `[Aviso Receita]` | sem fundo nem borda; ficam vazios quando não se aplicam |
 | 8 | Botão Voltar | — | canto superior esquerdo |
+
+**Página de dica "Dica - Índice"** (oculta): *Novo página → Formatar página →
+Informações da página → Usar como dica de ferramenta: ligado*; *Configurações
+de tela → Tipo: Dica de ferramenta* (320 × 240). Conteúdo: cartão (novo) com
+`dim_indice[indice]` (título), `[Fórmula do Índice]` e `[Leitura do Índice]`,
+sem rótulos. Oculte a página (clique direito na aba → Ocultar). Ao passar o
+mouse numa célula da matriz, a dica recebe o índice da linha.
 
 **Conferência no print (WEG 2024):** Z 8,58, zona segura; Liquidez
 Corrente 1,76 com mediana do setor 1,39; ΔZ −0,57.
