@@ -94,14 +94,8 @@ IF ( COUNTROWS ( fato_indicadores ) = 1,
 | Valor do Índice | O índice escolhido em `dim_indice[indice]`: um seletor que troca a medida (SWITCH). Formato vem de `dim_indice[formato]` | F, P |
 | Fórmula do Índice | Fórmula do índice escolhido, para tooltip | F |
 | Leitura do Índice | Direção de leitura (maior/menor é melhor) e ressalvas do índice escolhido, para tooltip | F |
+| Q1 / Mediana / Q3 do Setor (índice) | Atalhos: `[Valor do Índice]` com o item Q1, Mediana ou Q3 do Setor. Existem para que cada coluna de uma tabela possa ter formatação própria (ex.: barras só na mediana) e para `[Empresas]` caber na mesma tabela | P |
 | Nome do Índice | Nome do índice em contexto, para títulos dinâmicos (com o grupo de cálculo, "valor do campo" só aceita medida) | F |
-
-## Ficha (pasta Ficha)
-
-| Medida | Definição | Páginas |
-|---|---|---|
-| Empresa Selecionada | "nome (CD_CVM)" da empresa em contexto; sem empresa, instrui a chegar pela Triagem via Detalhamento | F |
-| Detalhe da Empresa | Setor · tipo de demonstrativo · situação na CVM da empresa em contexto | F |
 
 Itens do grupo de cálculo `Benchmark[Comparação]`. Eles só transformam as
 medidas de índice (`[Valor do Índice]`, os 9 índices e `[Z''-EM]`); qualquer
@@ -122,6 +116,13 @@ Implementação: os itens setoriais montam primeiro uma tabela
 (`MEDIANX`/`PERCENTILEX.INC` sobre ela). A forma direta, iterando
 `dim_empresa`, dava resultado errado numa consulta com muitas colunas; o
 caso está documentado em `docs/validacao-dax.md`.
+
+## Ficha (pasta Ficha)
+
+| Medida | Definição | Páginas |
+|---|---|---|
+| Empresa Selecionada | "nome (CD_CVM)" da empresa em contexto; sem empresa, instrui a chegar pela Triagem via Detalhamento | F |
+| Detalhe da Empresa | Setor · tipo de demonstrativo · situação na CVM da empresa em contexto | F |
 
 ## Triagem (pasta Triagem)
 

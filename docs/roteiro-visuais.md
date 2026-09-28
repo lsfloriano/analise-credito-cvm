@@ -99,8 +99,7 @@ Pergunta: *como o setor está, e onde a empresa se encaixa?*
 |---|---|---|---|
 | 1 | Segmentação | `dim_ano[ano]` | a sincronizada |
 | 2 | Segmentação | `dim_indice[indice]` | lista suspensa, seleção única, valor Z''-EM, título "Índice" |
-| 3 | Matriz "Distribuição do índice por setor" | Linhas `dim_setor[setor]`; Colunas `Benchmark[Comparação]`; Valores `[Valor do Índice]` | filtro do visual em `Benchmark[Comparação]`: Q1 do Setor, Mediana do Setor, Q3 do Setor. Barras de dados na mediana. Ordenar pela mediana. Desligue os totais. Cabeçalhos "Q1", "Mediana", "Q3" |
-| 4 | Tabela ao lado da matriz, alinhada | `dim_setor[setor]`, `[Empresas]` | mesma ordem da matriz. Fica separada porque o grupo de cálculo transformaria `[Empresas]` dentro da matriz |
+| 3 | Tabela "Distribuição do índice por setor" | `dim_setor[setor]`, `[Q1 do Setor (índice)]`, `[Mediana do Setor (índice)]`, `[Q3 do Setor (índice)]`, `[Empresas]` | título dinâmico com `[Nome do Índice]`. Barras de dados **só** em `[Mediana do Setor (índice)]` (*Elementos da célula → Série*). Ordenar pela mediana. Cabeçalhos "Setor", "Q1", "Mediana", "Q3", "Empresas". São medidas explícitas (atalhos para o grupo de cálculo), por isso dá para formatar cada coluna e pôr `[Empresas]` junto |
 | 5 | Gráfico de linhas "% em zona de risco" | Eixo X `dim_ano[ano]`; Y `[% em Risco]`; Legenda `dim_setor[setor]` | segmentação de ano → "nenhum" neste visual. Filtro do visual: Top 6 de `dim_setor[setor]` por `[Empresas]` (ou pequenos múltiplos por setor, se preferir) |
 | 6 | Cartão de texto | `[Nota Metodológica]` | rodapé |
 
