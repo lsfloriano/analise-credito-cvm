@@ -194,8 +194,13 @@
           "properties": {
             "text": {
               "expr": {
-                "Literal": {
-                  "Value": "'Migração entre zonas (linha: ano base; coluna: ano selecionado)'"
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "Título Migração"
                 }
               }
             }
