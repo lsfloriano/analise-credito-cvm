@@ -339,6 +339,27 @@ table Medidas
 		displayFolder: Benchmark
 		lineageTag: 3c55b224-764f-4420-9bdc-031550066d1b
 
+	/// 1º quartil, no setor, do índice escolhido em dim_indice (atalho para [Valor do Índice] com o item Q1 do Setor; permite formatar colunas separadamente).
+	measure 'Q1 do Setor (índice)' = CALCULATE ( [Valor do Índice], Benchmark[Comparação] = "Q1 do Setor" )
+		displayFolder: Benchmark
+		lineageTag: 5e44cdb3-0938-4731-930e-666f53dee1dd
+
+		formatStringDefinition = SELECTEDVALUE ( dim_indice[formato], "0.00" )
+
+	/// Mediana, no setor, do índice escolhido em dim_indice (atalho para [Valor do Índice] com o item Mediana do Setor).
+	measure 'Mediana do Setor (índice)' = CALCULATE ( [Valor do Índice], Benchmark[Comparação] = "Mediana do Setor" )
+		displayFolder: Benchmark
+		lineageTag: 38bc5b2e-d75b-4e44-8bf7-be2eefe6ad98
+
+		formatStringDefinition = SELECTEDVALUE ( dim_indice[formato], "0.00" )
+
+	/// 3º quartil, no setor, do índice escolhido em dim_indice (atalho para [Valor do Índice] com o item Q3 do Setor).
+	measure 'Q3 do Setor (índice)' = CALCULATE ( [Valor do Índice], Benchmark[Comparação] = "Q3 do Setor" )
+		displayFolder: Benchmark
+		lineageTag: 3ae52cef-0b9b-4241-8eb3-259894198154
+
+		formatStringDefinition = SELECTEDVALUE ( dim_indice[formato], "0.00" )
+
 	column _
 		isHidden
 		lineageTag: 32b3b0f3-e189-470f-95e8-59d85c2e418d

@@ -3490,6 +3490,159 @@ cultureInfo pt-BR
 			          }
 			        }
 			      ]
+			    },
+			    "medida.Q1_do_setor_índice": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Q1 do Setor (índice)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Q1 do setor (índice)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Q1 do setor": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "Q1": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "medida.mediana_do_setor_índice": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Mediana do Setor (índice)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "mediana do setor (índice)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "mediana do setor": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "Mediana": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "medida.Q3_do_setor_índice": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Q3 do Setor (índice)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Q3 do setor (índice)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Q3 do setor": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "Q3": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "medida.entity__Q1_do_setor_índice_FormatString": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "_Q1 do Setor (índice) FormatString"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "_Q1 do setor (índice) FormatString": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "medida.entity__mediana_do_setor_índice_FormatString": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "_Mediana do Setor (índice) FormatString"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "_mediana do setor (índice) FormatString": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "medida.entity__Q3_do_setor_índice_FormatString": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "_Q3 do Setor (índice) FormatString"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "_Q3 do setor (índice) FormatString": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
 			    }
 			  },
 			  "Relationships": {
@@ -3628,6 +3781,204 @@ cultureInfo pt-BR
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "dim_empresas_have_fato_indicadores"
+			        }
+			      ]
+			    },
+			    "fato_indicadore_has_medida_Q3_do_setor_índice": {
+			      "Binding": {
+			        "ConceptualEntity": "fato_indicadores"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "fato_indicadore": {
+			          "Target": {
+			            "Entity": "fato_indicadore"
+			          }
+			        },
+			        "medida.Q3_do_setor_índice": {
+			          "Target": {
+			            "Entity": "medida.Q3_do_setor_índice"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "fato_indicadore"
+			            },
+			            "Object": {
+			              "Role": "medida.Q3_do_setor_índice"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fato_indicadores_have_Q3_do_setor_índice"
+			        }
+			      ]
+			    },
+			    "dim_indice_has_medida_Q3_do_setor_índice": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_indice"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_indice": {
+			          "Target": {
+			            "Entity": "dim_indice"
+			          }
+			        },
+			        "medida.Q3_do_setor_índice": {
+			          "Target": {
+			            "Entity": "medida.Q3_do_setor_índice"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_indice"
+			            },
+			            "Object": {
+			              "Role": "medida.Q3_do_setor_índice"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_indices_have_Q3_do_setor_índice"
+			        }
+			      ]
+			    },
+			    "fato_indicadore_has_medida_mediana_do_setor_índice": {
+			      "Binding": {
+			        "ConceptualEntity": "fato_indicadores"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "fato_indicadore": {
+			          "Target": {
+			            "Entity": "fato_indicadore"
+			          }
+			        },
+			        "medida.mediana_do_setor_índice": {
+			          "Target": {
+			            "Entity": "medida.mediana_do_setor_índice"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "fato_indicadore"
+			            },
+			            "Object": {
+			              "Role": "medida.mediana_do_setor_índice"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fato_indicadores_have_mediana_do_setor_índice"
+			        }
+			      ]
+			    },
+			    "dim_indice_has_medida_mediana_do_setor_índice": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_indice"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_indice": {
+			          "Target": {
+			            "Entity": "dim_indice"
+			          }
+			        },
+			        "medida.mediana_do_setor_índice": {
+			          "Target": {
+			            "Entity": "medida.mediana_do_setor_índice"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_indice"
+			            },
+			            "Object": {
+			              "Role": "medida.mediana_do_setor_índice"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_indices_have_mediana_do_setor_índice"
+			        }
+			      ]
+			    },
+			    "fato_indicadore_has_medida_Q1_do_setor_índice": {
+			      "Binding": {
+			        "ConceptualEntity": "fato_indicadores"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "fato_indicadore": {
+			          "Target": {
+			            "Entity": "fato_indicadore"
+			          }
+			        },
+			        "medida.Q1_do_setor_índice": {
+			          "Target": {
+			            "Entity": "medida.Q1_do_setor_índice"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "fato_indicadore"
+			            },
+			            "Object": {
+			              "Role": "medida.Q1_do_setor_índice"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fato_indicadores_have_Q1_do_setor_índice"
+			        }
+			      ]
+			    },
+			    "dim_indice_has_medida_Q1_do_setor_índice": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_indice"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_indice": {
+			          "Target": {
+			            "Entity": "dim_indice"
+			          }
+			        },
+			        "medida.Q1_do_setor_índice": {
+			          "Target": {
+			            "Entity": "medida.Q1_do_setor_índice"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_indice"
+			            },
+			            "Object": {
+			              "Role": "medida.Q1_do_setor_índice"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_indices_have_Q1_do_setor_índice"
 			        }
 			      ]
 			    },
