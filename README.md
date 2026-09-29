@@ -1,19 +1,19 @@
 # Análise de crédito de companhias abertas (CVM)
 
-Pipeline em Python que transforma os demonstrativos financeiros públicos da
-CVM num modelo estrela, e relatório Power BI de **triagem de risco de crédito**
-das companhias abertas brasileiras não financeiras, de 2015 a 2025.
+Um pipeline em Python lê os demonstrativos financeiros que a CVM publica e
+monta um modelo estrela em Parquet. Sobre ele, um relatório Power BI faz a
+triagem de risco de crédito das companhias abertas brasileiras não
+financeiras, de 2015 a 2025. A pergunta que o relatório tenta responder é a
+do analista de crédito: essa empresa consegue honrar suas obrigações, e está
+melhorando ou piorando?
 
-A pergunta do analista de crédito que o relatório responde: *essa empresa
-consegue honrar suas obrigações, e está melhorando ou piorando?*
-
-- **830 empresas, 6.266 empresas-ano**, a partir das DFP anuais da CVM.
-- **Dois modelos de crédito:** Altman Z''-EM e Modelo Fleuriet (com efeito
-  tesoura), além de 9 índices clássicos com benchmark setorial.
-- **Números conferidos três vezes:** contra as demonstrações publicadas,
-  com testes unitários no pipeline (incluindo as fórmulas do Z e do
-  Fleuriet), e os índices e benchmarks calculados em DAX contra o Python em
-  todas as 6.266 empresas-ano (0 divergências).
+A base tem 830 empresas e 6.266 empresas-ano, tiradas das DFP anuais. Além de
+9 índices clássicos com comparação setorial, o relatório usa dois modelos de
+crédito: o Altman Z''-EM e o Modelo Fleuriet, com o alerta de efeito tesoura.
+Os números foram conferidos contra as demonstrações publicadas e por testes
+unitários do pipeline, que cobrem as fórmulas do Z e do Fleuriet. Os índices
+e benchmarks calculados em DAX foram comparados com o Python em todas as
+6.266 empresas-ano, sem divergência.
 
 ![Triagem de risco](docs/screenshots/01-triagem.png)
 
@@ -21,8 +21,8 @@ consegue honrar suas obrigações, e está melhorando ou piorando?*
 
 ### Altman Z''-EM
 
-Versão do Z-score de Altman para mercados emergentes, calculada só com
-valores contábeis (não usa valor de mercado):
+É a versão do Z-score de Altman para mercados emergentes. Usa só valores
+contábeis, sem valor de mercado:
 
 ```
 X1 = (Ativo Circulante − Passivo Circulante) / Ativo Total          capital de giro
@@ -38,16 +38,15 @@ Z''-EM = 3,25 + 6,56·X1 + 3,26·X2 + 6,72·X3 + 1,05·X4
 | Segura | Z > 5,85 | baixo risco de insolvência |
 | Cinzenta | 4,15 ≤ Z ≤ 5,85 | atenção |
 | Risco | Z < 4,15 | perfil parecido com o de empresas que quebraram |
-| Indeterminada | — | falta componente, ou passivo exigível zero |
+| Indeterminada | sem faixa | falta componente, ou passivo exigível zero |
 
-**É triagem, não previsão.** O modelo foi calibrado fora do Brasil; aqui ele
-serve para ordenar quem olhar primeiro, não para estimar probabilidade de
-default.
+O modelo foi calibrado fora do Brasil, então aqui ele serve para decidir
+quem olhar primeiro. Ele não estima a probabilidade de default.
 
 ### Modelo Fleuriet
 
-Lê o balanço pela ótica do capital de giro, separando o que é financiamento
-de longo prazo, operação e tesouraria:
+O Fleuriet lê o balanço pelo capital de giro e separa o financiamento de
+longo prazo, a operação e a tesouraria:
 
 ```
 CDG = (Patrimônio Líquido + Passivo Não Circulante) − Ativo Não Circulante   capital de giro
@@ -64,20 +63,21 @@ NCG = CDG − T                                                                 
 | V | − | − | − | Muito ruim |
 | VI | − | − | + | Alto risco |
 
-**Efeito tesoura:** alerta quando, por dois anos seguidos, a NCG cresce mais
-que o CDG. A empresa passa a financiar a operação com dívida de curto prazo,
-e o saldo de tesouraria afunda. Sem dois anos anteriores comparáveis, o
-campo fica **"sem histórico"**. Isso não é ausência de risco, e o relatório
-não conta esses casos no denominador da "% com alerta".
+O efeito tesoura acende quando a NCG cresce mais que o CDG por dois anos
+seguidos. Nesse caso a empresa está financiando a operação com dívida de
+curto prazo, e o saldo de tesouraria afunda. Quando faltam dois anos
+anteriores comparáveis, o campo mostra "sem histórico". Esses casos ficam
+fora do denominador da "% com alerta", porque falta de histórico não quer
+dizer que o risco é baixo.
 
 ## O relatório
 
 | Página | Para quê |
 |---|---|
-| **Triagem de risco** | Cartões por zona com variação anual, matriz de migração entre zonas (ano base selecionável) e tabela de empresas ordenada pelo Z, com zona, tipo Fleuriet e alerta de tesoura. Clique direito numa empresa → *Detalhamento* abre a ficha. |
-| **Ficha da empresa** | Z e zona, 10 índices lado a lado com a mediana e o quartil do setor e a variação anual, Z ao longo do tempo com as faixas das zonas, e CDG/NCG/T por ano. |
-| **Panorama setorial** | Q1, mediana e Q3 de qualquer índice por setor, e % de empresas em risco ao longo do tempo. |
-| **Qualidade dos dados** | O que o pipeline excluiu ou marcou, e por quê. |
+| Triagem de risco | Cartões por zona com a variação anual, matriz de migração entre zonas (o ano base pode ser escolhido) e tabela de empresas ordenada pelo Z, com zona, tipo Fleuriet e alerta de tesoura. Clique direito numa empresa e escolha *Detalhamento* para abrir a ficha. |
+| Ficha da empresa | Z e zona, os 10 índices com a mediana e o quartil do setor e a variação anual, o Z ao longo do tempo com as faixas das zonas, e CDG, NCG e T por ano. |
+| Panorama setorial | Q1, mediana e Q3 de qualquer índice por setor, e a % de empresas em risco ao longo do tempo. |
+| Qualidade dos dados | O que o pipeline excluiu ou marcou, e por quê. |
 
 | | |
 |---|---|
@@ -90,42 +90,40 @@ não conta esses casos no denominador da "% com alerta".
 CVM (ZIP/CSV) → extrair → limpar → filtrar → contas_base → scores → exportar → Parquet → Power BI (PBIP)
 ```
 
-**Pipeline (`pipeline/`).** Cada etapa é um módulo que recebe e devolve
-DataFrames, testável sem rede:
+Cada etapa do pipeline (`pipeline/`) é um módulo que recebe e devolve
+DataFrames, e todas podem ser testadas sem rede. O pipeline baixa a DFP
+anual de 2015 a 2025 e o cadastro da CVM, com cache e 3 tentativas. De cada
+período fica só a versão mais recente, para tratar reapresentações. A escala
+MIL vira reais, o consolidado é usado quando existe (o individual é o
+fallback) e só entram as contas fixas do plano CVM. Instituições financeiras
+saem, porque o layout do demonstrativo delas é outro, e também saem as
+empresas sem cadastro ou com ativo total zero. Cada exclusão ou problema
+vira uma linha no log de qualidade em vez de uma exceção.
 
-- **Download:** DFP anual de 2015 a 2025 e cadastro da CVM, com cache e 3
-  tentativas.
-- **Versão:** para cada período, fica a versão mais recente (reapresentação).
-- **Valores:** a escala MIL é convertida para reais. Usa o consolidado
-  quando existe e o individual como fallback. Entram só contas fixas do
-  plano CVM.
-- **Exclusões:** instituições financeiras (layout de demonstrativo
-  diferente), empresas sem cadastro e empresas com ativo total zero.
-- **Log:** cada exclusão ou problema vira uma linha no log de qualidade, e
-  não uma exceção.
-
-**Modelo semântico (`powerbi/`, formato PBIP/TMDL).** Estrela com
-`fato_indicadores` (uma linha por empresa-ano) ligada a `dim_empresa`,
+O modelo semântico (`powerbi/`, formato PBIP/TMDL) é uma estrela:
+`fato_indicadores`, com uma linha por empresa-ano, ligada a `dim_empresa`,
 `dim_ano` e `dim_zona`, e `dim_setor` ligada a `dim_empresa`. Todas as
-relações são 1:N com filtro unidirecional. O destaque de DAX:
+relações são 1:N com filtro unidirecional. No DAX:
 
-- **Índices** calculados só no contexto de uma empresa-ano. Um total que
-  soma balanços de empresas diferentes não é índice de ninguém.
-- **Grupo de cálculo `Benchmark`**: mediana, Q1/Q3, percentil, quartil e
-  variação anual do setor, aplicáveis a qualquer índice. Junto com o seletor
-  `[Valor do Índice]`, a ficha inteira é uma matriz só.
-- **Matriz de migração** entre zonas de dois anos (por padrão, o ano
+- Os índices só são calculados para uma empresa-ano por vez. Num total, o
+  numerador e o denominador somariam balanços de empresas diferentes, e o
+  resultado não descreve empresa nenhuma.
+- O grupo de cálculo `Benchmark` dá a mediana, Q1 e Q3, o percentil, o
+  quartil e a variação anual do setor para qualquer índice. Com o seletor
+  `[Valor do Índice]`, a comparação da ficha inteira cabe numa matriz.
+- A matriz de migração compara as zonas de dois anos (por padrão, o ano
   anterior), com tabelas desconectadas para o ano base e a zona de origem.
-- **Z limitado a ±25 na exibição**: 7% das empresas-ano têm Z extremo por
-  ativo irrisório; o Z real continua disponível e é o que define a zona.
+- Na exibição, o Z fica limitado a ±25. Cerca de 7% das empresas-ano têm Z
+  extremo por causa de ativo irrisório; o Z real continua disponível e é ele
+  que define a zona.
 
-Todas as medidas estão explicadas em
-[`docs/dicionario-metricas.md`](docs/dicionario-metricas.md).
+O dicionário de métricas,
+[`docs/dicionario-metricas.md`](docs/dicionario-metricas.md), explica cada
+medida.
 
 ## Como rodar
 
-**Pré-requisitos:** Python 3.13 e Power BI Desktop (versão com suporte a
-PBIP).
+Precisa de Python 3.13 e do Power BI Desktop, numa versão que abra PBIP.
 
 ```bash
 python -m venv .venv
@@ -133,18 +131,19 @@ python -m venv .venv
 .venv/Scripts/python -m pipeline run                 # baixa 2015–2025 e grava data/processed/*.parquet
 ```
 
-Opções: `--anos 2020-2025` restringe o período; `--forcar` baixa de novo
-arquivos já em cache.
+`--anos 2020-2025` restringe o período, e `--forcar` baixa de novo os
+arquivos que já estão em cache.
 
 Depois:
 
 1. Abra `powerbi/analise-credito-cvm.pbip` no Power BI Desktop.
-2. **Ajuste o parâmetro `PastaDados`** para a sua pasta
-   `data\processed\` (*Página Inicial → Transformar dados → Editar
-   parâmetros*). O caminho termina em barra invertida.
-3. Clique em **Atualizar**.
+2. Ajuste o parâmetro `PastaDados` para a sua pasta `data\processed\`, em
+   *Página Inicial > Transformar dados > Editar parâmetros*. O caminho
+   termina em barra invertida.
+3. Clique em Atualizar.
 
-Testes: `.venv/Scripts/python -m pytest` (82 testes, sem acesso à rede).
+Os testes rodam com `.venv/Scripts/python -m pytest` (82 testes, sem acesso
+à rede).
 
 ## Verificação
 
@@ -152,35 +151,35 @@ Testes: `.venv/Scripts/python -m pytest` (82 testes, sem acesso à rede).
 |---|---|---|
 | Testes unitários do pipeline e da validação | `tests/` | 82 passam |
 | Ativo Total, PL e Lucro Líquido contra as DFP publicadas (WEG, Vale, Ambev, Magazine Luiza, Petrobras) | [`docs/conferencia-dados-reais.md`](docs/conferencia-dados-reais.md) | batem |
-| Medidas DAX × Python: índices, Z, zona e tipo Fleuriet em todas as 6.266 empresas-ano; mediana/quartis por setor-ano; percentil; migração de zona | [`docs/validacao-dax.md`](docs/validacao-dax.md) | 0 divergências |
+| Medidas DAX × Python: índices, Z, zona e tipo Fleuriet em todas as 6.266 empresas-ano; mediana e quartis por setor-ano; percentil; migração de zona | [`docs/validacao-dax.md`](docs/validacao-dax.md) | 0 divergências |
 | QA do relatório: interações, detalhamento, totais, formatos, desempenho | checklist de QA | ok |
 
-A comparação DAX × Python é reproduzível: a consulta DAX roda no modelo, o
-resultado vai para um CSV, e `python -m pipeline validar-dax <tipo> <csv>`
-compara com os índices recalculados pelo Python. Dois defeitos do DAX foram
-encontrados assim e estão documentados em `docs/validacao-dax.md`.
+A comparação entre DAX e Python pode ser repetida. A consulta DAX roda no
+modelo e o resultado vai para um CSV; `python -m pipeline validar-dax <tipo>
+<csv>` compara esse CSV com os índices recalculados em Python. Foi assim que
+apareceram os dois defeitos de DAX descritos em `docs/validacao-dax.md`.
 
 ## Limitações conhecidas
 
-- **`--anos` parcial sobrescreve as saídas completas.** Rodar `--anos 2024`
+- Rodar com `--anos` parcial sobrescreve as saídas completas: `--anos 2024`
   deixa os Parquet só com 2024.
-- **Dois exercícios no mesmo ano civil** (troca de data de encerramento,
-  cerca de 6 empresas-ano): vale o de fim mais recente, e a DRE pode cobrir
-  menos de 12 meses.
-- **Dupla contagem nas medianas setoriais:** controladoras (pelo
-  consolidado) e controladas listadas aparecem como empresas separadas.
-- **Holdings:** o EBIT inclui equivalência patrimonial, e muitas têm receita
-  zero. Isso vale para 8,6% das empresas-ano, e nesses casos as margens
-  ficam em branco. Os 12,7% com PL ≤ 0 ficam sem ROE e sem Dívida
-  Líquida/PL.
-- **Z extremo:** 434 empresas-ano têm |Z| > 25, quase sempre empresas sem
-  operação. Na exibição aparecem como "< -25" ou "> 25".
-- **Cadastro:** a Multilaser ficou de fora porque o CD_CVM da DFP diverge do
-  cadastro. Não há fallback por CNPJ. As outras 19 empresas "sem cadastro"
-  são emissores estrangeiros.
-- **Fora do escopo:** dados trimestrais (ITR), dados de mercado (cotação,
-  valor de mercado), EBITDA (a depreciação não é conta fixa), bancos e
-  seguradoras, e layout para celular.
+- Quando uma empresa troca a data de encerramento, pode haver dois exercícios
+  no mesmo ano civil (cerca de 6 empresas-ano). Fica o de fim mais recente, e
+  a DRE dele pode cobrir menos de 12 meses.
+- As medianas setoriais contam controladoras (pelo consolidado) e controladas
+  listadas como empresas separadas, então um mesmo grupo pode entrar mais de
+  uma vez.
+- Nas holdings, o EBIT inclui equivalência patrimonial, e muitas têm receita
+  zero. Receita zero atinge 8,6% das empresas-ano, que ficam sem margens. Os
+  12,7% com PL ≤ 0 ficam sem ROE e sem Dívida Líquida/PL.
+- 434 empresas-ano têm |Z| > 25, quase sempre empresas sem operação. Na
+  exibição elas aparecem como "< -25" ou "> 25".
+- A Multilaser ficou de fora porque o CD_CVM da DFP não bate com o do
+  cadastro, e o pipeline não tenta casar por CNPJ. As outras 19 empresas "sem
+  cadastro" são emissores estrangeiros.
+- Ficaram fora do escopo os dados trimestrais (ITR), os dados de mercado
+  (cotação, valor de mercado), o EBITDA (a depreciação não é conta fixa),
+  bancos e seguradoras, e o layout para celular.
 
 ## Documentação
 
@@ -192,5 +191,5 @@ encontrados assim e estão documentados em `docs/validacao-dax.md`.
   [Validação DAX × Python](docs/validacao-dax.md) ·
   [Conferência com dados reais](docs/conferencia-dados-reais.md)
 
-Fontes: [Dados Abertos CVM](https://dados.cvm.gov.br/): DFP de companhias
-abertas e cadastro.
+Fonte dos dados: [Dados Abertos CVM](https://dados.cvm.gov.br/), com a DFP
+de companhias abertas e o cadastro.
