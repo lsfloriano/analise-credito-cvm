@@ -1,0 +1,52 @@
+table dim_empresa
+	lineageTag: 1c2563c9-8de3-43ad-b92e-98479801d02b
+
+	column cd_cvm
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 2b00c1fc-b2d3-47d7-9a4e-6249826b9c7c
+		summarizeBy: none
+		sourceColumn: cd_cvm
+
+	column cnpj
+		dataType: string
+		lineageTag: fb54dace-6e2e-46d5-b402-8ae03cb2a2d0
+		sourceColumn: cnpj
+
+	/// Nome no cadastro; há duplicados. Use dim_empresa[empresa] nos visuais.
+	column nome
+		dataType: string
+		isHidden
+		lineageTag: dbcd6cf3-80ae-4acd-bcba-987944b313c6
+		sourceColumn: nome
+
+	column setor
+		dataType: string
+		isHidden
+		lineageTag: 5d251f2b-0040-4184-b5f6-5d8860472155
+		sourceColumn: setor
+
+	column situacao
+		dataType: string
+		lineageTag: 02be5fee-2d3b-4e1e-982c-9aa42c4bfa40
+		sourceColumn: situacao
+
+	/// Tipo de demonstrativo do exercício MAIS RECENTE da empresa. O do ano está em fato_indicadores[tipo_demonstrativo].
+	column tipo_demonstrativo
+		dataType: string
+		lineageTag: 32cb4bdd-bef7-4c40-b0e7-413ec1f1e2b8
+		sourceColumn: tipo_demonstrativo
+
+	/// Rótulo único da empresa: nome (CD_CVM). Use nos visuais; há nomes duplicados.
+	column empresa = dim_empresa[nome] & " (" & dim_empresa[cd_cvm] & ")"
+		lineageTag: b92c8db1-5ac5-4aa6-beeb-c941c3e6657e
+
+	partition dim_empresa = m
+		mode: import
+		source =
+				let
+				    Fonte = Parquet.Document(File.Contents(PastaDados & "dim_empresa.parquet"))
+				in
+				    Fonte
+

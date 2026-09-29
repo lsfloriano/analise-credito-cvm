@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "analise-credito-cvm"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "92d39db2-feaa-4a3f-9497-9805259dc538"
+  }
+}

@@ -1,0 +1,16 @@
+relationship fato_indicadores_cd_cvm_dim_empresa_cd_cvm
+	fromColumn: fato_indicadores.cd_cvm
+	toColumn: dim_empresa.cd_cvm
+
+relationship fato_indicadores_ano_dim_ano_ano
+	fromColumn: fato_indicadores.ano
+	toColumn: dim_ano.ano
+
+relationship fato_indicadores_zona_dim_zona_zona
+	fromColumn: fato_indicadores.zona
+	toColumn: dim_zona.zona
+
+relationship dim_empresa_setor_dim_setor_setor
+	fromColumn: dim_empresa.setor
+	toColumn: dim_setor.setor
+

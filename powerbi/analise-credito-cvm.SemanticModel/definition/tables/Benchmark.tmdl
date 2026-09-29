@@ -1,0 +1,142 @@
+table Benchmark
+	lineageTag: 6df11baa-9a6c-42d1-baed-f3f032b7d4b6
+
+	/// Compara a medida com o setor da empresa: mediana, quartis, percentil, quartil e variação anual.
+	calculationGroup
+		precedence: 10
+
+		/// A própria medida, sem transformação.
+		calculationItem Valor = SELECTEDMEASURE ()
+
+		/// Mediana da medida entre as empresas do mesmo setor no ano (brancos fora).
+		calculationItem 'Mediana do Setor' =
+				-- o benchmark só se aplica às medidas de índice; as demais (textos, avisos) passam intactas
+				IF (
+				    NOT ISSELECTEDMEASURE ( [Valor do Índice], [Liquidez Corrente], [Liquidez Seca], [Endividamento Geral], [Dívida Líquida / PL], [Cobertura de Juros], [Margem EBIT], [Margem Líquida], [ROA], [ROE], [Z''-EM] ),
+				    SELECTEDMEASURE (),
+				    VAR _valores =
+				        CALCULATETABLE (
+				            FILTER (
+				                ADDCOLUMNS ( VALUES ( fato_indicadores[cd_cvm] ), "@v", SELECTEDMEASURE () ),
+				                NOT ISBLANK ( [@v] )
+				            ),
+				            REMOVEFILTERS ( dim_empresa ),
+				            REMOVEFILTERS ( dim_zona ),
+				            VALUES ( dim_empresa[setor] )
+				        )
+				    RETURN MEDIANX ( _valores, [@v] )
+				)
+
+		/// Primeiro quartil (PERCENTILEX.INC 0,25) da medida no setor.
+		calculationItem 'Q1 do Setor' =
+				-- o benchmark só se aplica às medidas de índice; as demais (textos, avisos) passam intactas
+				IF (
+				    NOT ISSELECTEDMEASURE ( [Valor do Índice], [Liquidez Corrente], [Liquidez Seca], [Endividamento Geral], [Dívida Líquida / PL], [Cobertura de Juros], [Margem EBIT], [Margem Líquida], [ROA], [ROE], [Z''-EM] ),
+				    SELECTEDMEASURE (),
+				    VAR _valores =
+				        CALCULATETABLE (
+				            FILTER (
+				                ADDCOLUMNS ( VALUES ( fato_indicadores[cd_cvm] ), "@v", SELECTEDMEASURE () ),
+				                NOT ISBLANK ( [@v] )
+				            ),
+				            REMOVEFILTERS ( dim_empresa ),
+				            REMOVEFILTERS ( dim_zona ),
+				            VALUES ( dim_empresa[setor] )
+				        )
+				    RETURN PERCENTILEX.INC ( _valores, [@v], 0.25 )
+				)
+
+		/// Terceiro quartil (PERCENTILEX.INC 0,75) da medida no setor.
+		calculationItem 'Q3 do Setor' =
+				-- o benchmark só se aplica às medidas de índice; as demais (textos, avisos) passam intactas
+				IF (
+				    NOT ISSELECTEDMEASURE ( [Valor do Índice], [Liquidez Corrente], [Liquidez Seca], [Endividamento Geral], [Dívida Líquida / PL], [Cobertura de Juros], [Margem EBIT], [Margem Líquida], [ROA], [ROE], [Z''-EM] ),
+				    SELECTEDMEASURE (),
+				    VAR _valores =
+				        CALCULATETABLE (
+				            FILTER (
+				                ADDCOLUMNS ( VALUES ( fato_indicadores[cd_cvm] ), "@v", SELECTEDMEASURE () ),
+				                NOT ISBLANK ( [@v] )
+				            ),
+				            REMOVEFILTERS ( dim_empresa ),
+				            REMOVEFILTERS ( dim_zona ),
+				            VALUES ( dim_empresa[setor] )
+				        )
+				    RETURN PERCENTILEX.INC ( _valores, [@v], 0.75 )
+				)
+
+		/// Fração das empresas do setor com valor menor ou igual ao da empresa.
+		calculationItem 'Percentil no Setor' =
+				-- o benchmark só se aplica às medidas de índice; as demais (textos, avisos) passam intactas
+				IF (
+				    NOT ISSELECTEDMEASURE ( [Valor do Índice], [Liquidez Corrente], [Liquidez Seca], [Endividamento Geral], [Dívida Líquida / PL], [Cobertura de Juros], [Margem EBIT], [Margem Líquida], [ROA], [ROE], [Z''-EM] ),
+				    SELECTEDMEASURE (),
+				    VAR _v = SELECTEDMEASURE ()
+				    VAR _valores =
+				        CALCULATETABLE (
+				            FILTER (
+				                ADDCOLUMNS ( VALUES ( fato_indicadores[cd_cvm] ), "@v", SELECTEDMEASURE () ),
+				                NOT ISBLANK ( [@v] )
+				            ),
+				            REMOVEFILTERS ( dim_empresa ),
+				            REMOVEFILTERS ( dim_zona ),
+				            VALUES ( dim_empresa[setor] )
+				        )
+				    VAR _n = COUNTROWS ( _valores )
+				    VAR _ate = COUNTROWS ( FILTER ( _valores, [@v] <= _v ) )
+				    RETURN IF ( NOT ISBLANK ( _v ) && _n > 0, DIVIDE ( _ate, _n ) )
+				)
+
+			formatStringDefinition = IF ( NOT ISSELECTEDMEASURE ( [Valor do Índice], [Liquidez Corrente], [Liquidez Seca], [Endividamento Geral], [Dívida Líquida / PL], [Cobertura de Juros], [Margem EBIT], [Margem Líquida], [ROA], [ROE], [Z''-EM] ), SELECTEDMEASUREFORMATSTRING (), "0%" )
+
+		/// Quartil de 1 (valores mais baixos) a 4 (mais altos) da empresa no setor.
+		calculationItem 'Quartil no Setor' =
+				-- o benchmark só se aplica às medidas de índice; as demais (textos, avisos) passam intactas
+				IF (
+				    NOT ISSELECTEDMEASURE ( [Valor do Índice], [Liquidez Corrente], [Liquidez Seca], [Endividamento Geral], [Dívida Líquida / PL], [Cobertura de Juros], [Margem EBIT], [Margem Líquida], [ROA], [ROE], [Z''-EM] ),
+				    SELECTEDMEASURE (),
+				    VAR _v = SELECTEDMEASURE ()
+				    VAR _valores =
+				        CALCULATETABLE (
+				            FILTER (
+				                ADDCOLUMNS ( VALUES ( fato_indicadores[cd_cvm] ), "@v", SELECTEDMEASURE () ),
+				                NOT ISBLANK ( [@v] )
+				            ),
+				            REMOVEFILTERS ( dim_empresa ),
+				            REMOVEFILTERS ( dim_zona ),
+				            VALUES ( dim_empresa[setor] )
+				        )
+				    VAR _n = COUNTROWS ( _valores )
+				    VAR _p = DIVIDE ( COUNTROWS ( FILTER ( _valores, [@v] <= _v ) ), _n )
+				    RETURN IF ( NOT ISBLANK ( _v ) && _n > 0, MIN ( 4, MAX ( 1, ROUNDUP ( _p * 4, 0 ) ) ) )
+				)
+
+			formatStringDefinition = IF ( NOT ISSELECTEDMEASURE ( [Valor do Índice], [Liquidez Corrente], [Liquidez Seca], [Endividamento Geral], [Dívida Líquida / PL], [Cobertura de Juros], [Margem EBIT], [Margem Líquida], [ROA], [ROE], [Z''-EM] ), SELECTEDMEASUREFORMATSTRING (), "0" )
+
+		/// Valor do ano menos o do ano anterior, mesma empresa (ou mesmo contexto).
+		calculationItem 'Δ vs Ano Anterior' =
+				-- o benchmark só se aplica às medidas de índice; as demais (textos, avisos) passam intactas
+				IF (
+				    NOT ISSELECTEDMEASURE ( [Valor do Índice], [Liquidez Corrente], [Liquidez Seca], [Endividamento Geral], [Dívida Líquida / PL], [Cobertura de Juros], [Margem EBIT], [Margem Líquida], [ROA], [ROE], [Z''-EM] ),
+				    SELECTEDMEASURE (),
+				    VAR _ano = MAX ( dim_ano[ano] )
+				    VAR _atual = SELECTEDMEASURE ()
+				    VAR _anterior = CALCULATE ( SELECTEDMEASURE (), dim_ano[ano] = _ano - 1 )
+				    RETURN IF ( NOT ISBLANK ( _atual ) && NOT ISBLANK ( _anterior ), _atual - _anterior )
+				)
+
+	column Comparação
+		dataType: string
+		lineageTag: 13db3cdc-a06a-4ac9-8c09-245c5261a4c3
+		sourceColumn: Name
+		sortByColumn: Ordem
+
+	column Ordem
+		dataType: int64
+		isHidden
+		lineageTag: f82741e8-4ba8-4193-b5fe-78f2b64e2346
+		summarizeBy: none
+		sourceColumn: Ordinal
+
+	partition Partition_Benchmark = calculationGroup
+

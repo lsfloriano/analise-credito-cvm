@@ -1,0 +1,47 @@
+table qualidade
+	lineageTag: 84559cf7-470b-44cf-bf4a-8ab21cfb7dd2
+
+	column cd_cvm
+		dataType: int64
+		formatString: 0
+		lineageTag: f5678b53-5b2a-4f8a-9cfd-291a19686455
+		summarizeBy: none
+		sourceColumn: cd_cvm
+
+	column nome
+		dataType: string
+		lineageTag: dd020c25-6fd8-49b5-bd48-2e0856b88487
+		sourceColumn: nome
+
+	column ano
+		dataType: int64
+		formatString: 0
+		lineageTag: 47d4a009-dfda-493f-8f93-34870fc26b97
+		summarizeBy: none
+		sourceColumn: ano
+
+	column etapa
+		dataType: string
+		lineageTag: 4afa436d-2e52-4481-8186-24fcb79cec38
+		sourceColumn: etapa
+
+	column problema
+		dataType: string
+		lineageTag: 1c7b9908-44b5-434d-ab84-d0dd637ee13c
+		sourceColumn: problema
+
+	/// Problema sem o nome da conta (ex.: 'conta ausente: fco' -> 'conta ausente'). Use em gráficos; o detalhe fica em qualidade[problema].
+	column tipo_problema =
+			VAR _p = qualidade[problema]
+			VAR _pos = SEARCH ( ":", _p, 1, 0 )
+			RETURN IF ( _pos > 0, LEFT ( _p, _pos - 1 ), _p )
+		lineageTag: 1b20e932-1e51-409d-9ded-4db2687c73ae
+
+	partition qualidade = m
+		mode: import
+		source =
+				let
+				    Fonte = Parquet.Document(File.Contents(PastaDados & "qualidade.parquet"))
+				in
+				    Fonte
+
