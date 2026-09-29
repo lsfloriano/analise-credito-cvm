@@ -14,8 +14,10 @@ table dim_empresa
 		lineageTag: fb54dace-6e2e-46d5-b402-8ae03cb2a2d0
 		sourceColumn: cnpj
 
+	/// Nome no cadastro; há duplicados. Use dim_empresa[empresa] nos visuais.
 	column nome
 		dataType: string
+		isHidden
 		lineageTag: dbcd6cf3-80ae-4acd-bcba-987944b313c6
 		sourceColumn: nome
 
@@ -30,6 +32,7 @@ table dim_empresa
 		lineageTag: 02be5fee-2d3b-4e1e-982c-9aa42c4bfa40
 		sourceColumn: situacao
 
+	/// Tipo de demonstrativo do exercício MAIS RECENTE da empresa. O do ano está em fato_indicadores[tipo_demonstrativo].
 	column tipo_demonstrativo
 		dataType: string
 		lineageTag: 32cb4bdd-bef7-4c40-b0e7-413ec1f1e2b8

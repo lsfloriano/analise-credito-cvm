@@ -21,6 +21,7 @@ table fato_indicadores
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Tipo de demonstrativo (consolidado ou individual) usado NESTE ano.
 	column tipo_demonstrativo
 		dataType: string
 		lineageTag: c4cef3d4-9c6d-4d66-b84e-ce4c20cfceee

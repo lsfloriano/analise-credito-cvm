@@ -89,7 +89,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "2024L"
+                                "Value": "2025L"
                               }
                             }
                           ]
@@ -157,6 +157,11 @@
           }
         }
       ]
+    },
+    "syncGroup": {
+      "groupName": "ano",
+      "fieldChanges": true,
+      "filterChanges": true
     },
     "drillFilterOtherVisuals": true
   }

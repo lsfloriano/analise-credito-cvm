@@ -5,6 +5,7 @@ table Benchmark
 	calculationGroup
 		precedence: 10
 
+		/// A própria medida, sem transformação.
 		calculationItem Valor = SELECTEDMEASURE ()
 
 		/// Mediana da medida entre as empresas do mesmo setor no ano (brancos fora).

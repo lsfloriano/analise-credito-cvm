@@ -7,8 +7,12 @@ table Medidas
 		displayFolder: Índices
 		lineageTag: b7db323a-c345-4e71-b8a6-0ee5c3c2df14
 
-	/// (Ativo Circulante − Estoques) / Passivo Circulante. Maior é melhor.
-	measure 'Liquidez Seca' = IF ( COUNTROWS ( fato_indicadores ) = 1, DIVIDE ( SUM ( fato_indicadores[ativo_circulante] ) - SUM ( fato_indicadores[estoques] ), SUM ( fato_indicadores[passivo_circulante] ) ) )
+	/// (Ativo Circulante − Estoques) / Passivo Circulante. Maior é melhor. Em branco se estoques ausente (como no Python).
+	measure 'Liquidez Seca' =
+			VAR _est = SUM ( fato_indicadores[estoques] )
+			RETURN
+			    IF ( COUNTROWS ( fato_indicadores ) = 1 && NOT ISBLANK ( _est ),
+			        DIVIDE ( SUM ( fato_indicadores[ativo_circulante] ) - _est, SUM ( fato_indicadores[passivo_circulante] ) ) )
 		formatString: 0.00
 		displayFolder: Índices
 		lineageTag: f13945fe-dd67-4037-9b81-8da7b2772d97
@@ -19,18 +23,18 @@ table Medidas
 		displayFolder: Índices
 		lineageTag: a9832721-352d-42d4-ac20-e3c8d0326f91
 
-	/// (Empréstimos CP + LP − Caixa − Aplicações) / PL. Em branco se PL ≤ 0 ou caixa ausente. Menor é melhor.
+	/// (Empréstimos CP + LP − Caixa − Aplicações) / PL. Em branco se PL ≤ 0 ou se faltar qualquer componente (como no Python). Menor é melhor.
 	measure 'Dívida Líquida / PL' =
 			VAR _pl = SUM ( fato_indicadores[patrimonio_liquido] )
+			VAR _cp = SUM ( fato_indicadores[emprestimos_cp] )
+			VAR _lp = SUM ( fato_indicadores[emprestimos_lp] )
 			VAR _caixa = SUM ( fato_indicadores[caixa] )
+			VAR _aplic = SUM ( fato_indicadores[aplicacoes_financeiras] )
 			RETURN
 			    IF (
-			        COUNTROWS ( fato_indicadores ) = 1 && _pl > 0 && NOT ISBLANK ( _caixa ),
-			        DIVIDE (
-			            SUM ( fato_indicadores[emprestimos_cp] ) + SUM ( fato_indicadores[emprestimos_lp] )
-			                - _caixa - SUM ( fato_indicadores[aplicacoes_financeiras] ),
-			            _pl
-			        )
+			        COUNTROWS ( fato_indicadores ) = 1 && _pl > 0
+			            && NOT ISBLANK ( _cp ) && NOT ISBLANK ( _lp ) && NOT ISBLANK ( _caixa ) && NOT ISBLANK ( _aplic ),
+			        DIVIDE ( _cp + _lp - _caixa - _aplic, _pl )
 			    )
 		formatString: 0.00
 		displayFolder: Índices
@@ -81,7 +85,7 @@ table Medidas
 		displayFolder: Scores
 		lineageTag: 676e1dd0-3c21-4261-a6a1-43e98722fe6f
 
-	/// Tipo Fleuriet de 1 a 6 (oculta; usada na validação e em ordenação).
+	/// Tipo Fleuriet de 1 a 6 (oculta; usada na validação).
 	measure 'Tipo Fleuriet (nº)' = IF ( COUNTROWS ( fato_indicadores ) = 1, MAX ( fato_indicadores[tipo_fleuriet] ) )
 		formatString: 0
 		isHidden
@@ -136,8 +140,10 @@ table Medidas
 
 	/// Texto quando a receita líquida é zero.
 	measure 'Aviso Receita' =
-			IF ( COUNTROWS ( fato_indicadores ) = 1 && SUM ( fato_indicadores[receita_liquida] ) = 0,
-			    "Receita líquida zero (comum em holdings): margens não são calculadas." )
+			VAR _r = SUM ( fato_indicadores[receita_liquida] )
+			RETURN
+			    IF ( COUNTROWS ( fato_indicadores ) = 1 && NOT ISBLANK ( _r ) && _r = 0,
+			        "Receita líquida zero (comum em holdings): margens não são calculadas." )
 		displayFolder: Avisos
 		lineageTag: 072eac1c-3a0e-4707-a885-25dff5725e2f
 
@@ -239,9 +245,10 @@ table Medidas
 		displayFolder: Triagem
 		lineageTag: 7a012643-1318-4d6b-83df-b0f929e46eb8
 
-	/// Empresas que estavam na zona de origem (linhas) no ano base e estão na zona da coluna no ano selecionado.
+	/// Empresas que estavam na zona da linha (zona_origem) no ano base e estão na zona da coluna (dim_zona) no ano selecionado. Sem ano base escolhido, usa o ano anterior; ano base igual ou posterior ao selecionado deixa em branco.
 	measure 'Migração de Zona' =
-			VAR _anoBase = SELECTEDVALUE ( ano_base[ano_base] )
+			VAR _ano = MAX ( dim_ano[ano] )
+			VAR _anoBase = COALESCE ( SELECTEDVALUE ( ano_base[ano_base] ), _ano - 1 )  -- sem seleção: ano anterior
 			VAR _origem = SELECTEDVALUE ( zona_origem[zona_origem] )
 			VAR _destino = VALUES ( fato_indicadores[cd_cvm] )
 			VAR _naOrigem =
@@ -252,8 +259,10 @@ table Medidas
 			        dim_ano[ano] = _anoBase
 			    )
 			RETURN
-			    IF ( NOT ISBLANK ( _anoBase ) && NOT ISBLANK ( _origem ),
-			        COUNTROWS ( INTERSECT ( _destino, _naOrigem ) ) )
+			    IF (
+			        HASONEVALUE ( dim_ano[ano] ) && _anoBase < _ano && NOT ISBLANK ( _origem ),
+			        COUNTROWS ( INTERSECT ( _destino, _naOrigem ) )
+			    )
 		formatString: 0
 		displayFolder: Triagem
 		lineageTag: 040872ed-7c33-4251-aa34-3bffe318715a
@@ -271,8 +280,8 @@ table Medidas
 		displayFolder: Qualidade
 		lineageTag: 462f6863-38ab-410e-ab75-d0d092040945
 
-	/// Empresas distintas excluídas na etapa de filtro.
-	measure 'Empresas Excluídas' = CALCULATE ( DISTINCTCOUNT ( qualidade[cd_cvm] ), qualidade[etapa] = "filtro" )
+	/// Empresas distintas excluídas na etapa de filtro; respeita a segmentação de etapa (em branco se ela excluir 'filtro').
+	measure 'Empresas Excluídas' = CALCULATE ( DISTINCTCOUNT ( qualidade[cd_cvm] ), KEEPFILTERS ( qualidade[etapa] = "filtro" ) )
 		formatString: 0
 		displayFolder: Qualidade
 		lineageTag: 28d64758-4cda-4a09-86e7-d0f2436fc05b
@@ -323,12 +332,12 @@ table Medidas
 		displayFolder: Ficha
 		lineageTag: 73f3dbda-3790-4302-86ae-27f0964fcd91
 
-	/// Setor, tipo de demonstrativo e situação na CVM da empresa em contexto.
+	/// Setor, tipo de demonstrativo usado no ano exibido e situação na CVM da empresa em contexto.
 	measure 'Detalhe da Empresa' =
 			IF (
 			    HASONEVALUE ( dim_empresa[cd_cvm] ),
 			    SELECTEDVALUE ( dim_empresa[setor] )
-			        & "  ·  demonstrativo " & SELECTEDVALUE ( dim_empresa[tipo_demonstrativo] )
+			        & "  ·  demonstrativo " & COALESCE ( SELECTEDVALUE ( fato_indicadores[tipo_demonstrativo] ), "sem dado no ano" )
 			        & "  ·  situação CVM: " & SELECTEDVALUE ( dim_empresa[situacao] )
 			)
 		displayFolder: Ficha
@@ -340,25 +349,44 @@ table Medidas
 		lineageTag: 3c55b224-764f-4420-9bdc-031550066d1b
 
 	/// 1º quartil, no setor, do índice escolhido em dim_indice (atalho para [Valor do Índice] com o item Q1 do Setor; permite formatar colunas separadamente).
-	measure 'Q1 do Setor (índice)' = CALCULATE ( [Valor do Índice], Benchmark[Comparação] = "Q1 do Setor" )
+	measure 'Q1 do Setor (índice)' = CALCULATE ( [Valor do Índice], REMOVEFILTERS ( Benchmark ), Benchmark[Comparação] = "Q1 do Setor" )  -- REMOVEFILTERS tira também Benchmark[Ordem]
 		displayFolder: Benchmark
 		lineageTag: 5e44cdb3-0938-4731-930e-666f53dee1dd
 
 		formatStringDefinition = SELECTEDVALUE ( dim_indice[formato], "0.00" )
 
 	/// Mediana, no setor, do índice escolhido em dim_indice (atalho para [Valor do Índice] com o item Mediana do Setor).
-	measure 'Mediana do Setor (índice)' = CALCULATE ( [Valor do Índice], Benchmark[Comparação] = "Mediana do Setor" )
+	measure 'Mediana do Setor (índice)' = CALCULATE ( [Valor do Índice], REMOVEFILTERS ( Benchmark ), Benchmark[Comparação] = "Mediana do Setor" )  -- REMOVEFILTERS tira também Benchmark[Ordem]
 		displayFolder: Benchmark
 		lineageTag: 38bc5b2e-d75b-4e44-8bf7-be2eefe6ad98
 
 		formatStringDefinition = SELECTEDVALUE ( dim_indice[formato], "0.00" )
 
 	/// 3º quartil, no setor, do índice escolhido em dim_indice (atalho para [Valor do Índice] com o item Q3 do Setor).
-	measure 'Q3 do Setor (índice)' = CALCULATE ( [Valor do Índice], Benchmark[Comparação] = "Q3 do Setor" )
+	measure 'Q3 do Setor (índice)' = CALCULATE ( [Valor do Índice], REMOVEFILTERS ( Benchmark ), Benchmark[Comparação] = "Q3 do Setor" )  -- REMOVEFILTERS tira também Benchmark[Ordem]
 		displayFolder: Benchmark
 		lineageTag: 3ae52cef-0b9b-4241-8eb3-259894198154
 
 		formatStringDefinition = SELECTEDVALUE ( dim_indice[formato], "0.00" )
+
+	/// Título dinâmico da matriz de migração: anos comparados, ou aviso quando o ano base não é anterior ao selecionado.
+	measure 'Título Migração' =
+			VAR _ano = MAX ( dim_ano[ano] )
+			VAR _anoBase = COALESCE ( SELECTEDVALUE ( ano_base[ano_base] ), _ano - 1 )
+			RETURN
+			    IF (
+			        _anoBase < _ano,
+			        "Migração entre zonas: " & _anoBase & " → " & _ano & " (linha: " & _anoBase & "; coluna: " & _ano & ")",
+			        "Migração entre zonas: escolha um ano base anterior a " & _ano
+			    )
+		displayFolder: Triagem
+		lineageTag: 88b4cb91-a396-4787-869c-31f969922166
+
+	/// Empresas do contexto com o índice escolhido (dim_indice) calculado, isto é, quantos valores entram na mediana e nos quartis. Menor que [Empresas] quando há PL ≤ 0, receita zero ou Z indeterminado.
+	measure 'Empresas com Valor' = COUNTROWS ( FILTER ( VALUES ( fato_indicadores[cd_cvm] ), NOT ISBLANK ( [Valor do Índice] ) ) )
+		formatString: 0
+		displayFolder: Benchmark
+		lineageTag: 725cb794-4a61-40e3-a365-df63ad7cad63
 
 	column _
 		isHidden

@@ -83,11 +83,11 @@
                       "Entity": "Medidas"
                     }
                   },
-                  "Property": "Empresas"
+                  "Property": "Empresas com Valor"
                 }
               },
-              "queryRef": "Medidas.Empresas",
-              "nativeQueryRef": "Empresas"
+              "queryRef": "Medidas.Empresas com Valor",
+              "nativeQueryRef": "Empresas com Valor"
             }
           ]
         }
@@ -251,81 +251,6 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "50400fe0164d50de0b8a",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Benchmark"
-              }
-            },
-            "Property": "Comparação"
-          }
-        },
-        "type": "Categorical",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "b",
-              "Entity": "Benchmark",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "In": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "b"
-                          }
-                        },
-                        "Property": "Comparação"
-                      }
-                    }
-                  ],
-                  "Values": [
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'Mediana do Setor'"
-                        }
-                      }
-                    ],
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'Q3 do Setor'"
-                        }
-                      }
-                    ],
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'Q1 do Setor'"
-                        }
-                      }
-                    ]
-                  ]
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User",
-        "objects": {
-          "general": [
-            {
-              "properties": {}
-            }
-          ]
-        }
-      },
-      {
         "name": "c41755cbd3093db7ac62",
         "field": {
           "Measure": {
@@ -335,6 +260,21 @@
               }
             },
             "Property": "Empresas"
+          }
+        },
+        "type": "Advanced",
+        "howCreated": "User"
+      },
+      {
+        "name": "8b16f29cb1796ecdcd04",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Medidas"
+              }
+            },
+            "Property": "Empresas com Valor"
           }
         },
         "type": "Advanced",
@@ -359,7 +299,7 @@
                           "Source": "m"
                         }
                       },
-                      "Property": "Empresas"
+                      "Property": "Empresas com Valor"
                     }
                   },
                   "Right": {
