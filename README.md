@@ -11,7 +11,8 @@ consegue honrar suas obrigações, e está melhorando ou piorando?*
 - **Dois modelos de crédito:** Altman Z''-EM e Modelo Fleuriet (com efeito
   tesoura), além de 9 índices clássicos com benchmark setorial.
 - **Números conferidos três vezes:** contra as demonstrações publicadas,
-  com testes unitários no pipeline, e as medidas DAX contra o Python em
+  com testes unitários no pipeline (incluindo as fórmulas do Z e do
+  Fleuriet), e os índices e benchmarks calculados em DAX contra o Python em
   todas as 6.266 empresas-ano (0 divergências).
 
 ![Triagem de risco](docs/screenshots/01-triagem.png)
@@ -113,8 +114,8 @@ relações são 1:N com filtro unidirecional. O destaque de DAX:
 - **Grupo de cálculo `Benchmark`**: mediana, Q1/Q3, percentil, quartil e
   variação anual do setor, aplicáveis a qualquer índice. Junto com o seletor
   `[Valor do Índice]`, a ficha inteira é uma matriz só.
-- **Matriz de migração** entre zonas de dois anos quaisquer, com tabelas
-  desconectadas para o ano base e a zona de origem.
+- **Matriz de migração** entre zonas de dois anos (por padrão, o ano
+  anterior), com tabelas desconectadas para o ano base e a zona de origem.
 - **Z limitado a ±25 na exibição**: 7% das empresas-ano têm Z extremo por
   ativo irrisório; o Z real continua disponível e é o que define a zona.
 
@@ -143,13 +144,13 @@ Depois:
    parâmetros*). O caminho termina em barra invertida.
 3. Clique em **Atualizar**.
 
-Testes: `.venv/Scripts/python -m pytest` (80 testes, sem acesso à rede).
+Testes: `.venv/Scripts/python -m pytest` (82 testes, sem acesso à rede).
 
 ## Verificação
 
 | Verificação | Onde | Resultado |
 |---|---|---|
-| Testes unitários do pipeline e da validação | `tests/` | 80 passam |
+| Testes unitários do pipeline e da validação | `tests/` | 82 passam |
 | Ativo Total, PL e Lucro Líquido contra as DFP publicadas (WEG, Vale, Ambev, Magazine Luiza, Petrobras) | [`docs/conferencia-dados-reais.md`](docs/conferencia-dados-reais.md) | batem |
 | Medidas DAX × Python: índices, Z, zona e tipo Fleuriet em todas as 6.266 empresas-ano; mediana/quartis por setor-ano; percentil; migração de zona | [`docs/validacao-dax.md`](docs/validacao-dax.md) | 0 divergências |
 | QA do relatório: interações, detalhamento, totais, formatos, desempenho | checklist de QA | ok |

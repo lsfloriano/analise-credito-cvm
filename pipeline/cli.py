@@ -89,6 +89,11 @@ def main(argv=None):
     p_val.add_argument("--ano", type=int)
     p_val.add_argument("--ano-base", type=int)
     args = parser.parse_args(argv)
+    if args.comando == "validar-dax":
+        if args.tipo in ("percentil", "migracao") and args.ano is None:
+            parser.error(f"validar-dax {args.tipo} exige --ano")
+        if args.tipo == "migracao" and args.ano_base is None:
+            parser.error("validar-dax migracao exige --ano-base")
 
     if args.comando == "run":
         run(_parse_anos(args.anos), forcar=args.forcar)

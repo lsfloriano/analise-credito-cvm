@@ -116,3 +116,18 @@ def test_ler_resultado_dax_decimal_virgula_do_modelo_pt_br(tmp_path):
     df = validacao.ler_resultado_dax(p)
     assert df.iloc[0]["x"] == 1.5
     assert math.isnan(df.iloc[1]["x"])
+
+
+def test_cli_percentil_e_migracao_exigem_ano():
+    from pipeline import cli
+    with pytest.raises(SystemExit):
+        cli.main(["validar-dax", "percentil", "x.csv"])
+    with pytest.raises(SystemExit):
+        cli.main(["validar-dax", "migracao", "x.csv", "--ano", "2025"])
+
+
+def test_comparar_coluna_ausente_no_dax_da_erro_claro():
+    dax = pd.DataFrame({"k": [1]})
+    ref = pd.DataFrame({"k": [1], "x": [1.0]})
+    with pytest.raises(ValueError, match="x"):
+        validacao.comparar(dax, ref, ["k"], ["x"])

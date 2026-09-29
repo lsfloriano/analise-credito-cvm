@@ -14,6 +14,9 @@ def ler_resultado_dax(caminho):
 
 
 def comparar(dax, ref, chaves, colunas, tol=1e-6):
+    ausentes = [c for c in [*chaves, *colunas] if c not in dax.columns]
+    if ausentes:
+        raise ValueError(f"colunas ausentes no resultado do DAX: {ausentes}")
     m = dax.merge(ref, on=chaves, how="outer", suffixes=("_dax", "_ref"), indicator=True)
     saida = [{**{k: r[k] for k in chaves}, "coluna": "(linha)", "dax": r["_merge"], "ref": None}
              for _, r in m[m["_merge"] != "both"].iterrows()]

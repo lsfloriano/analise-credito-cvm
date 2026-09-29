@@ -17,6 +17,9 @@ Tolerância relativa e absoluta de 1e-6; branco no DAX = NaN no Python.
 | Percentil no setor para os 10 índices, 2024 | `percentil` | 633 | 0 |
 | Matriz de migração de zona 2024 → 2025 | `migracao` | 11 células | 0 |
 | Matriz de migração 2015 → 2025, no formato do visual (com colunas de ordem), após o defeito 2 | `migracao` | 11 células | 0 |
+| Índices após as guardas de nulo da revisão final (2026-09-29) | `indices` | 6.266 | 0 |
+| Medidas `(índice)` (Q1/Mediana/Q3) e `[Empresas com Valor]`, no formato da tabela do Panorama: setor × ano × índice | script ad hoc sobre `comparar` | 2.768 | 0 |
+| Migração sem ano base (= ano anterior) × com ano base 2024, ano 2025 | manual | 11 células | iguais; ano base = ano → vazio |
 | Contagens por zona, % em risco, % com efeito tesoura, qualidade | manual | — | 0 |
 | Quartil e Δ vs ano anterior, WEG (5410) 2024, via `[Valor do Índice]` | manual | 70 | 0 |
 
@@ -27,12 +30,20 @@ Detalhe das checagens manuais:
 - `% em Risco` = 0,335418 (2.092 / 6.237); `% com Efeito Tesoura` = 0,199778
   (898 / 4.495, nulos fora do denominador).
 - `Problemas de Qualidade` 1.268; `Empresas Excluídas` 217; `Empresas` 830.
-- `Δ Empresas vs Ano Anterior` na zona risco, 2025: −7 (pandas: −7).
+- `[vs Ano Anterior]` (antes `Δ Empresas vs Ano Anterior`) na zona risco, 2025: −7 (pandas: −7).
 - WEG 2024: mediana do setor (Máquinas, Equipamentos, Veículos e Peças) da
   Liquidez Corrente 1,386293 e do Z 5,093053, iguais ao `groupby` do pandas;
   `Δ vs Ano Anterior` do Z −0,569428 = Z 2024 − Z 2023 de
   `referencia_indices.csv`; quartis coerentes com os percentis
   (0,75 → 3; 0,93 → 4; 0,13 → 1).
+
+## Alcance da validação
+
+Z, zona e tipo Fleuriet são calculados no pipeline e só lidos pelo DAX
+(`MAX`); a comparação deles prova que o modelo carregou as colunas certas,
+não a fórmula, que é coberta pelos testes de `tests/test_scores.py`. Os 9
+índices, o benchmark setorial, o percentil e a migração são calculados no
+DAX e comparados com cálculo independente no Python.
 
 ## Defeito encontrado e corrigido
 

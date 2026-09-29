@@ -2,7 +2,7 @@
 
 Modelo: `powerbi/analise-credito-cvm.SemanticModel` (tabela `Medidas` e grupo
 de cálculo `Benchmark`). Responsável: Leonardo Santiago Floriano.
-Última revisão: 2026-09-23. A descrição de cada medida no modelo repete a
+Última revisão: 2026-09-29. A descrição de cada medida no modelo repete a
 definição curta daqui. **Mudou uma medida? Atualize esta página no mesmo
 commit.** O DAX completo está no TMDL (`definition/tables/Medidas.tmdl`,
 `Benchmark.tmdl`); a validação contra o Python está em `docs/validacao-dax.md`.
@@ -34,9 +34,9 @@ Páginas: **T** = Triagem de risco · **F** = Ficha da empresa ·
 | Medida | Definição | Leitura | Brancos | Páginas |
 |---|---|---|---|---|
 | Liquidez Corrente | Ativo Circulante / Passivo Circulante | Maior é melhor; < 1 = o ativo de curto prazo não cobre o passivo de curto prazo | PC = 0 | F, P |
-| Liquidez Seca | (Ativo Circulante − Estoques) / Passivo Circulante | Maior é melhor; liquidez sem depender de vender estoques | PC = 0 | F, P |
+| Liquidez Seca | (Ativo Circulante − Estoques) / Passivo Circulante | Maior é melhor; liquidez sem depender de vender estoques | PC = 0; estoques ausente | F, P |
 | Endividamento Geral | (Passivo Circulante + Passivo Não Circulante) / Ativo Total | Menor é melhor; parcela do ativo financiada por terceiros | AT = 0 | F, P |
-| Dívida Líquida / PL | (Empréstimos CP + Empréstimos LP − Caixa − Aplicações) / PL | Menor é melhor; negativo = caixa líquido | PL ≤ 0; caixa ausente (1 empresa-ano) | F, P |
+| Dívida Líquida / PL | (Empréstimos CP + Empréstimos LP − Caixa − Aplicações) / PL | Menor é melhor; negativo = caixa líquido | PL ≤ 0; qualquer componente ausente (caixa ausente em 1 empresa-ano) | F, P |
 | Cobertura de Juros | EBIT / \|Despesas Financeiras\| | Maior é melhor; < 1x = o operacional não paga os juros | despesa financeira = 0 | F, P |
 | Margem EBIT | EBIT / Receita Líquida | Maior é melhor | receita = 0 | F, P |
 | Margem Líquida | Lucro Líquido / Receita Líquida | Maior é melhor | receita = 0 | F, P |
@@ -94,8 +94,9 @@ IF ( COUNTROWS ( fato_indicadores ) = 1,
 | Valor do Índice | O índice escolhido em `dim_indice[indice]`: um seletor que troca a medida (SWITCH). Formato vem de `dim_indice[formato]` | F, P |
 | Fórmula do Índice | Fórmula do índice escolhido, para tooltip | F |
 | Leitura do Índice | Direção de leitura (maior/menor é melhor) e ressalvas do índice escolhido, para tooltip | F |
-| Q1 / Mediana / Q3 do Setor (índice) | Atalhos: `[Valor do Índice]` com o item Q1, Mediana ou Q3 do Setor. Existem para que cada coluna de uma tabela possa ter formatação própria (ex.: barras só na mediana) e para `[Empresas]` caber na mesma tabela | P |
-| Nome do Índice | Nome do índice em contexto, para títulos dinâmicos (com o grupo de cálculo, "valor do campo" só aceita medida) | F |
+| Q1 / Mediana / Q3 do Setor (índice) | Atalhos: `[Valor do Índice]` com o item Q1, Mediana ou Q3 do Setor. Existem para que cada coluna de uma tabela possa ter formatação própria (ex.: barras só na mediana) e para `[Empresas]` caber na mesma tabela. **Não combine com `Benchmark[Comparação]` no mesmo visual**: na linha "Mediana do Setor" o item seria aplicado duas vezes e a medida fica em branco | P |
+| Nome do Índice | Nome do índice em contexto, para títulos dinâmicos (com o grupo de cálculo, "valor do campo" só aceita medida) | F, P |
+| Empresas com Valor | Empresas com o índice escolhido calculado: quantos valores entram de fato na mediana e nos quartis (menor que `[Empresas]` quando há PL ≤ 0, receita zero ou Z indeterminado). Use no filtro "≥ 3" do Panorama | P |
 
 Itens do grupo de cálculo `Benchmark[Comparação]`. Eles só transformam as
 medidas de índice (`[Valor do Índice]`, os 9 índices e `[Z''-EM]`); qualquer
@@ -109,7 +110,7 @@ outra medida (textos, avisos, contagens) passa intacta, o que permite usar
 | Q1 do Setor / Q3 do Setor | 1º e 3º quartis (`PERCENTILEX.INC` 0,25 e 0,75, interpolação linear) | Idem |
 | Percentil no Setor | Fração das empresas do setor com valor **menor ou igual** ao da empresa (0–100%) | Empates contam a favor da empresa |
 | Quartil no Setor | 1 (valores mais baixos) a 4 (mais altos), = ⌈percentil × 4⌉ | **Não** diz se é bom: para Endividamento e Dívida Líquida/PL, quartil 1 é o melhor. Ver `[Leitura do Índice]`. |
-| Δ vs Ano Anterior | Valor do ano − valor do ano anterior, mesmo contexto | Para índices em %, o resultado está em pontos percentuais |
+| Δ vs Ano Anterior | Valor do ano − valor do ano anterior, mesmo contexto | Para índices em %, o resultado está em pontos percentuais. Sobre o Z usa o Z real: numa empresa fora da escala o Δ pode ser enorme (a Triagem usa `[Δ Z''-EM (exibição)]`, que esconde esse caso) |
 
 Implementação: os itens setoriais montam primeiro uma tabela
 (empresa → valor) só com as empresas que têm linha no fato, e depois agregam
@@ -122,7 +123,7 @@ caso está documentado em `docs/validacao-dax.md`.
 | Medida | Definição | Páginas |
 |---|---|---|
 | Empresa Selecionada | "nome (CD_CVM)" da empresa em contexto; sem empresa, instrui a chegar pela Triagem via Detalhamento | F |
-| Detalhe da Empresa | Setor · tipo de demonstrativo · situação na CVM da empresa em contexto | F |
+| Detalhe da Empresa | Setor · tipo de demonstrativo **usado no ano exibido** (`fato_indicadores[tipo_demonstrativo]`; em 257 empresas-ano ele difere do mais recente) · situação na CVM | F |
 
 ## Triagem (pasta Triagem)
 
@@ -130,10 +131,11 @@ caso está documentado em `docs/validacao-dax.md`.
 |---|---|---|
 | Empresas | Empresas distintas no contexto | T, P |
 | Empresas-Ano | Linhas empresa-ano no contexto | — |
-| Δ Empresas vs Ano Anterior | Empresas no ano − empresas no ano anterior, mesmo filtro (ex.: cartão da zona risco). Mistura migração de zona com entrada e saída de empresas do universo | T |
+| vs Ano Anterior | *(nome curto por ter sido renomeada no cartão; antes "Δ Empresas vs Ano Anterior")* Empresas no ano − empresas no ano anterior, mesmo filtro (ex.: cartão da zona risco). Mistura migração de zona com entrada e saída de empresas do universo | T |
 | % em Risco | Empresas-ano na zona risco / empresas-ano com Z calculado. A zona indeterminada fica fora do denominador | P |
 | % com Efeito Tesoura | Empresas-ano com alerta / empresas-ano com histórico comparável. **Nulos fora do denominador** (1.771 empresas-ano sem histórico) | T |
-| Migração de Zona | Empresas que estavam na zona da linha (`zona_origem`) no ano de `ano_base` e estão na zona da coluna (`dim_zona`) no ano selecionado. Só conta empresas presentes nos dois anos | T |
+| Migração de Zona | Empresas que estavam na zona da linha (`zona_origem`) no ano de `ano_base` e estão na zona da coluna (`dim_zona`) no ano selecionado. Só conta empresas presentes nos dois anos. **Sem ano base escolhido, usa o ano anterior**; ano base igual ou posterior ao selecionado → branco (comparar 2024 com 2024 daria só a diagonal) | T |
+| Título Migração | Título dinâmico da matriz: "Migração entre zonas: 2024 → 2025 …", ou um aviso quando o ano base não é anterior ao selecionado | T |
 | Cor da Zona | Hexadecimal da zona (segura #2E7D32, cinzenta #F9A825, risco #C62828, indeterminada #9E9E9E), para formatação condicional | T, F |
 
 ## Avisos (pasta Avisos)
@@ -150,7 +152,7 @@ caso está documentado em `docs/validacao-dax.md`.
 | Medida | Definição | Páginas |
 |---|---|---|
 | Problemas de Qualidade | Registros no log de qualidade do pipeline (`qualidade`, tabela desconectada) | Q |
-| Empresas Excluídas | Empresas distintas excluídas na etapa `filtro`: setor financeiro, sem cadastro, ativo total nulo ou zero, layout não padrão | Q |
+| Empresas Excluídas | Empresas distintas excluídas na etapa `filtro`: setor financeiro, sem cadastro, ativo total nulo ou zero, layout não padrão. Respeita a segmentação de etapa (em branco se ela excluir "filtro") | Q |
 
 ## Limitações
 
